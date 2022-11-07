@@ -21,10 +21,10 @@ import {
   Dimensions,
   ScrollView,
   TextInput,
-  StatusBar
+  StatusBar,
 } from 'react-native';
 import Icons from 'react-native-vector-icons/MaterialIcons';
-const {width,height} = Dimensions.get("window")
+const {width, height} = Dimensions.get('window');
 // const MrzScanner = NativeModules.RNMrzscannerlib;
 // // import MrzScanner from 'react-native-mrzscannerlib';
 // MrzScanner.registerWithLicenseKey(
@@ -62,7 +62,6 @@ export default function Home({navigation}) {
     //     console.log('doc success');
     //   },
     // );
-
     // subscription = EventEmitter.addListener(
     //   'scannerWasDismissedEmittedEvent',
     //   (body) => {
@@ -83,19 +82,40 @@ export default function Home({navigation}) {
   return (
     <ScrollView
       contentContainerStyle={{minHeight: Dimensions.get('window').height}}>
-         <StatusBar backgroundColor="white" barStyle="dark-content" />
-        <View style={styles.container}>
-          <Text style={{textAlign:"left",fontSize:width /15,fontWeight:"bold"}}>Hello,Bob</Text>
-          <View style={{flexDirection:"row",alignItems:"center"}}>
-            <View style={{backgroundColor:"black",height:5,flex:1}}></View>
-            <Image source={require("../assets/airplane.png")} style={{height:40,width:40}}/>
-          </View>
-<View style={{flexDirection:"row",flex:1,justifyContent:"flex-start",marginTop:20}}>
-  <TouchableOpacity style={[styles.card,{marginRight:10}]}>
-    <Icons color="white" name="qr-code-scanner" size={50}/><Text style={{color:"white"}}>Scan passport</Text></TouchableOpacity>
-  <TouchableOpacity onPress={() => navigation.navigate("GroundHandling")} style={styles.card}><Icons color="white" name="flight-land" size={50}/><Text style={{color:"white"}}>Ground Handling</Text></TouchableOpacity>
-</View>
+      <StatusBar backgroundColor="white" barStyle="dark-content" />
+      <View style={styles.container}>
+        <Text
+          style={{textAlign: 'left', fontSize: width / 15, fontWeight: 'bold'}}>
+          Hello,Bob
+        </Text>
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <View style={{backgroundColor: 'black', height: 5, flex: 1}}></View>
+          <Image
+            source={require('../assets/airplane.png')}
+            style={{height: 40, width: 40}}
+          />
         </View>
+        <View
+          style={{
+            flexDirection: 'row',
+            flex: 1,
+            justifyContent: 'flex-start',
+            marginTop: 20,
+          }}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Scanner')}
+            style={[styles.card, {marginRight: 10}]}>
+            <Icons color="white" name="qr-code-scanner" size={50} />
+            <Text style={{color: 'white'}}>Scan passport</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('GroundHandling')}
+            style={styles.card}>
+            <Icons color="white" name="flight-land" size={50} />
+            <Text style={{color: 'white'}}>Ground Handling</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
       {/* <View style={styles.container}>
         <TouchableOpacity
           onPress={() => navigation.navigate('Calendar')}
@@ -214,7 +234,7 @@ export default function Home({navigation}) {
 
 const styles = StyleSheet.create({
   container: {
-    padding:20,
+    padding: 20,
     flex: 1,
     justifyContent: 'center',
     // alignItems: 'center',
@@ -230,16 +250,16 @@ const styles = StyleSheet.create({
     color: '#333333',
     marginBottom: 5,
   },
-  card:{
-    backgroundColor:"#3b7dfc",
-    borderRadius:10,
-    flex:1,
-    height:100,
-    justifyContent:"center",
-    alignItems:"center",
+  card: {
+    backgroundColor: '#3b7dfc',
+    borderRadius: 10,
+    flex: 1,
+    height: 100,
+    justifyContent: 'center',
+    alignItems: 'center',
     shadowColor: '#ccc',
     shadowOpacity: 0.5,
     elevation: 10,
     shadowOffset: {width: 0, height: 3},
-  }
+  },
 });
