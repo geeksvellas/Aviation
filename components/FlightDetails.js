@@ -107,11 +107,11 @@ export default function FlightDetails() {
       const res = await DocumentPicker.pickSingle({
         type: [DocumentPicker.types.images],
       });
-      console.log(res);
+      // console.log(res);
       RNFetchBlob.fs
         .readFile(res.uri, 'base64')
         .then(encoded => {
-          console.log(encoded, 'reports.base64');
+          // console.log(encoded, 'reports.base64');
           setloading(false);
           var tfpreparation = [...fpreparation];
           tfpreparation[index].file.push({
@@ -190,11 +190,11 @@ export default function FlightDetails() {
       const res = await DocumentPicker.pickSingle({
         type: [DocumentPicker.types.images],
       });
-      console.log(res);
+      // console.log(res);
       RNFetchBlob.fs
         .readFile(res.uri, 'base64')
         .then(encoded => {
-          console.log(encoded, 'reports.base64');
+          // console.log(encoded, 'reports.base64');
           setloading(false);
           var tcheckList = [...checkList];
           tcheckList[index].file.push({
@@ -642,7 +642,7 @@ export default function FlightDetails() {
                           },
                         }),
                       }}>
-                      <Text>{value.name}</Text>
+                      <Text style={{color: 'black'}}>{value.name}</Text>
                       <TouchableOpacity onPress={() => removeFileFP(3, index)}>
                         <Icons
                           style={{color: 'green', marginLeft: 10}}
@@ -703,7 +703,7 @@ export default function FlightDetails() {
                           },
                         }),
                       }}>
-                      <Text>{value.name}</Text>
+                      <Text style={{color: 'black'}}>{value.name}</Text>
                       <TouchableOpacity onPress={() => removeFileFP(4, index)}>
                         <Icons
                           style={{color: 'green', marginLeft: 10}}
@@ -763,7 +763,7 @@ export default function FlightDetails() {
                           },
                         }),
                       }}>
-                      <Text>{value.name}</Text>
+                      <Text style={{color: 'black'}}>{value.name}</Text>
                       <TouchableOpacity onPress={() => removeFileFP(5, index)}>
                         <Icons
                           style={{color: 'green', marginLeft: 10}}
@@ -1306,7 +1306,7 @@ export default function FlightDetails() {
                           },
                         }),
                       }}>
-                      <Text>{value.name}</Text>
+                      <Text style={{color: 'black'}}>{value.name}</Text>
                       <TouchableOpacity
                         onPress={() => removeFilePreA(10, index)}>
                         <Icons
@@ -1398,7 +1398,7 @@ export default function FlightDetails() {
               <TouchableOpacity
                 style={styleSheet.picker}
                 onPress={() => showDatePicker('time', 0)}>
-                <Text style={{fontSize: 20}}>
+                <Text style={{fontSize: 20, color: 'black'}}>
                   {arrival[0] ? arrival[0] : '-- : --'}
                 </Text>
               </TouchableOpacity>
@@ -1411,7 +1411,7 @@ export default function FlightDetails() {
               <TouchableOpacity
                 style={styleSheet.picker}
                 onPress={() => showDatePicker('time', 1)}>
-                <Text style={{fontSize: 20}}>
+                <Text style={{fontSize: 20, color: 'black'}}>
                   {arrival[1] ? arrival[1] : '-- : --'}
                 </Text>
               </TouchableOpacity>
@@ -1433,7 +1433,7 @@ export default function FlightDetails() {
                 <TouchableOpacity
                   style={styleSheet.picker}
                   onPress={() => showDatePicker('time', 2)}>
-                  <Text style={{fontSize: 20}}>
+                  <Text style={{fontSize: 20, color: 'black'}}>
                     {arrival[2] ? arrival[2] : '-- : --'}
                   </Text>
                 </TouchableOpacity>
@@ -1448,7 +1448,7 @@ export default function FlightDetails() {
                 <TouchableOpacity
                   style={styleSheet.picker}
                   onPress={() => showDatePicker('time', 3)}>
-                  <Text style={{fontSize: 20}}>
+                  <Text style={{fontSize: 20, color: 'black'}}>
                     {arrival[3] ? arrival[3] : '-- : --'}
                   </Text>
                 </TouchableOpacity>
@@ -1502,7 +1502,7 @@ export default function FlightDetails() {
                 <TouchableOpacity
                   style={styleSheet.picker}
                   onPress={() => showDatePicker('time', 4)}>
-                  <Text style={{fontSize: 20}}>
+                  <Text style={{fontSize: 20, color: 'black'}}>
                     {arrival[4] ? arrival[4] : '-- : --'}
                   </Text>
                 </TouchableOpacity>
@@ -1517,7 +1517,7 @@ export default function FlightDetails() {
                 <TouchableOpacity
                   style={styleSheet.picker}
                   onPress={() => showDatePicker('time', 5)}>
-                  <Text style={{fontSize: 20}}>
+                  <Text style={{fontSize: 20, color: 'black'}}>
                     {arrival[5] ? arrival[5] : '-- : --'}
                   </Text>
                 </TouchableOpacity>
@@ -1532,7 +1532,7 @@ export default function FlightDetails() {
                 <TouchableOpacity
                   style={styleSheet.picker}
                   onPress={() => showDatePicker('time', 6)}>
-                  <Text style={{fontSize: 20}}>
+                  <Text style={{fontSize: 20, color: 'black'}}>
                     {arrival[6] ? arrival[6] : '-- : --'}
                   </Text>
                 </TouchableOpacity>
@@ -1547,7 +1547,7 @@ export default function FlightDetails() {
                 <TouchableOpacity
                   style={styleSheet.picker}
                   onPress={() => showDatePicker('time', 7)}>
-                  <Text style={{fontSize: 20}}>
+                  <Text style={{fontSize: 20, color: 'black'}}>
                     {arrival[7] ? arrival[7] : '-- : --'}
                   </Text>
                 </TouchableOpacity>
@@ -1562,7 +1562,7 @@ export default function FlightDetails() {
                 <TouchableOpacity
                   style={styleSheet.picker}
                   onPress={() => showDatePicker('time', 8)}>
-                  <Text style={{fontSize: 20}}>
+                  <Text style={{fontSize: 20, color: 'black'}}>
                     {arrival[8] ? arrival[8] : '-- : --'}
                   </Text>
                 </TouchableOpacity>
@@ -1685,7 +1685,7 @@ export default function FlightDetails() {
                 <TouchableOpacity
                   style={styleSheet.picker}
                   onPress={() => showDatePicker('time', 11)}>
-                  <Text style={{fontSize: 20}}>
+                  <Text style={{fontSize: 20, color: 'black'}}>
                     {arrival[11] ? arrival[11] : '-- : --'}
                   </Text>
                 </TouchableOpacity>
@@ -1732,7 +1732,7 @@ export default function FlightDetails() {
                 <TouchableOpacity
                   style={styleSheet.picker}
                   onPress={() => showDatePicker('time', 13)}>
-                  <Text style={{fontSize: 20}}>
+                  <Text style={{fontSize: 20, color: 'black'}}>
                     {arrival[13] ? arrival[13] : '-- : --'}
                   </Text>
                 </TouchableOpacity>
@@ -1779,7 +1779,7 @@ export default function FlightDetails() {
                 <TouchableOpacity
                   style={styleSheet.picker}
                   onPress={() => showDatePicker('time', 15)}>
-                  <Text style={{fontSize: 20}}>
+                  <Text style={{fontSize: 20, color: 'black'}}>
                     {arrival[15] ? arrival[15] : '-- : --'}
                   </Text>
                 </TouchableOpacity>
@@ -1826,7 +1826,7 @@ export default function FlightDetails() {
                 <TouchableOpacity
                   style={styleSheet.picker}
                   onPress={() => showDatePicker('time', 17)}>
-                  <Text style={{fontSize: 20}}>
+                  <Text style={{fontSize: 20, color: 'black'}}>
                     {arrival[17] ? arrival[17] : '-- : --'}
                   </Text>
                 </TouchableOpacity>
@@ -1875,7 +1875,7 @@ export default function FlightDetails() {
                 <TouchableOpacity
                   style={styleSheet.picker}
                   onPress={() => showDatePicker('time', 19)}>
-                  <Text style={{fontSize: 20}}>
+                  <Text style={{fontSize: 20, color: 'black'}}>
                     {arrival[19] ? arrival[19] : '-- : --'}
                   </Text>
                 </TouchableOpacity>
@@ -1890,7 +1890,7 @@ export default function FlightDetails() {
                 <TouchableOpacity
                   style={styleSheet.picker}
                   onPress={() => showDatePicker('time', 20)}>
-                  <Text style={{fontSize: 20}}>
+                  <Text style={{fontSize: 20, color: 'black'}}>
                     {arrival[20] ? arrival[20] : '-- : --'}
                   </Text>
                 </TouchableOpacity>
@@ -1905,7 +1905,7 @@ export default function FlightDetails() {
                 <TouchableOpacity
                   style={styleSheet.picker}
                   onPress={() => showDatePicker('time', 21)}>
-                  <Text style={{fontSize: 20}}>
+                  <Text style={{fontSize: 20, color: 'black'}}>
                     {arrival[21] ? arrival[21] : '-- : --'}
                   </Text>
                 </TouchableOpacity>
@@ -1975,7 +1975,7 @@ export default function FlightDetails() {
                 <TouchableOpacity
                   style={styleSheet.picker}
                   onPress={() => showDatePicker('time', 23)}>
-                  <Text style={{fontSize: 20}}>
+                  <Text style={{fontSize: 20, color: 'black'}}>
                     {arrival[23] ? arrival[23] : '-- : --'}
                   </Text>
                 </TouchableOpacity>
@@ -1990,7 +1990,7 @@ export default function FlightDetails() {
                 <TouchableOpacity
                   style={styleSheet.picker}
                   onPress={() => showDatePicker('time', 24)}>
-                  <Text style={{fontSize: 20}}>
+                  <Text style={{fontSize: 20, color: 'black'}}>
                     {arrival[24] ? arrival[24] : '-- : --'}
                   </Text>
                 </TouchableOpacity>
@@ -2092,7 +2092,7 @@ export default function FlightDetails() {
                 <TouchableOpacity
                   style={styleSheet.picker}
                   onPress={() => showDatePicker('time', 27)}>
-                  <Text style={{fontSize: 20}}>
+                  <Text style={{fontSize: 20, color: 'black'}}>
                     {arrival[27] ? arrival[27] : '-- : --'}
                   </Text>
                 </TouchableOpacity>
@@ -2107,7 +2107,7 @@ export default function FlightDetails() {
                 <TouchableOpacity
                   style={styleSheet.picker}
                   onPress={() => showDatePicker('time', 28)}>
-                  <Text style={{fontSize: 20}}>
+                  <Text style={{fontSize: 20, color: 'black'}}>
                     {arrival[28] ? arrival[28] : '-- : --'}
                   </Text>
                 </TouchableOpacity>
@@ -2122,7 +2122,7 @@ export default function FlightDetails() {
                 <TouchableOpacity
                   style={styleSheet.picker}
                   onPress={() => showDatePicker('time', 29)}>
-                  <Text style={{fontSize: 20}}>
+                  <Text style={{fontSize: 20, color: 'black'}}>
                     {arrival[29] ? arrival[29] : '-- : --'}
                   </Text>
                 </TouchableOpacity>
@@ -2137,7 +2137,7 @@ export default function FlightDetails() {
                 <TouchableOpacity
                   style={styleSheet.picker}
                   onPress={() => showDatePicker('time', 30)}>
-                  <Text style={{fontSize: 20}}>
+                  <Text style={{fontSize: 20, color: 'black'}}>
                     {arrival[30] ? arrival[30] : '-- : --'}
                   </Text>
                 </TouchableOpacity>
@@ -2152,7 +2152,7 @@ export default function FlightDetails() {
                 <TouchableOpacity
                   style={styleSheet.picker}
                   onPress={() => showDatePicker('time', 31)}>
-                  <Text style={{fontSize: 20}}>
+                  <Text style={{fontSize: 20, color: 'black'}}>
                     {arrival[31] ? arrival[31] : '-- : --'}
                   </Text>
                 </TouchableOpacity>
@@ -2167,7 +2167,7 @@ export default function FlightDetails() {
                 <TouchableOpacity
                   style={styleSheet.picker}
                   onPress={() => showDatePicker('time', 32)}>
-                  <Text style={{fontSize: 20}}>
+                  <Text style={{fontSize: 20, color: 'black'}}>
                     {arrival[32] ? arrival[32] : '-- : --'}
                   </Text>
                 </TouchableOpacity>
@@ -2378,7 +2378,7 @@ export default function FlightDetails() {
                   borderWidth: 1,
                   borderRadius: 8,
                 }}>
-                <Text style={{color: 'green'}}>Add photos</Text>
+                <Text style={{color: 'green'}}>Take Camera</Text>
               </TouchableOpacity>
             </View>
             <Text style={styleSheet.label}>Crew Transport Pickup Time</Text>
@@ -2386,7 +2386,7 @@ export default function FlightDetails() {
               <TouchableOpacity
                 style={styleSheet.picker}
                 onPress={() => showDatePickerDeparture('datetime', 1)}>
-                <Text style={{fontSize: 20}}>
+                <Text style={{fontSize: 20, color: 'black'}}>
                   {pdeparturecheck[1]
                     ? pdeparturecheck[1]
                     : 'dd/mm/yy, -- : --'}
@@ -2403,7 +2403,7 @@ export default function FlightDetails() {
               <TouchableOpacity
                 style={styleSheet.picker}
                 onPress={() => showDatePickerDeparture('datetime', 2)}>
-                <Text style={{fontSize: 20}}>
+                <Text style={{fontSize: 20, color: 'black'}}>
                   {pdeparturecheck[2]
                     ? pdeparturecheck[2]
                     : 'dd/mm/yy, -- : --'}
@@ -2420,7 +2420,7 @@ export default function FlightDetails() {
               <TouchableOpacity
                 style={styleSheet.picker}
                 onPress={() => showDatePickerDeparture('datetime', 3)}>
-                <Text style={{fontSize: 20}}>
+                <Text style={{fontSize: 20, color: 'black'}}>
                   {pdeparturecheck[3]
                     ? pdeparturecheck[3]
                     : 'dd/mm/yy, -- : --'}
@@ -2497,7 +2497,7 @@ export default function FlightDetails() {
                 <TouchableOpacity
                   style={styleSheet.picker}
                   onPress={() => showDatePickerDeparture('time', 5)}>
-                  <Text style={{fontSize: 20}}>
+                  <Text style={{fontSize: 20, color: 'black'}}>
                     {pdeparturecheck[5] ? pdeparturecheck[5] : 'dd/mm/yy,--:--'}
                   </Text>
                 </TouchableOpacity>
@@ -2512,7 +2512,7 @@ export default function FlightDetails() {
                 <TouchableOpacity
                   style={styleSheet.picker}
                   onPress={() => showDatePickerDeparture('time', 6)}>
-                  <Text style={{fontSize: 20}}>
+                  <Text style={{fontSize: 20, color: 'black'}}>
                     {pdeparturecheck[6] ? pdeparturecheck[6] : 'dd/mm/yy,--:--'}
                   </Text>
                 </TouchableOpacity>
@@ -2527,7 +2527,7 @@ export default function FlightDetails() {
                 <TouchableOpacity
                   style={styleSheet.picker}
                   onPress={() => showDatePickerDeparture('time', 7)}>
-                  <Text style={{fontSize: 20}}>
+                  <Text style={{fontSize: 20, color: 'black'}}>
                     {pdeparturecheck[7] ? pdeparturecheck[7] : 'dd/mm/yy,--:--'}
                   </Text>
                 </TouchableOpacity>
@@ -2542,7 +2542,7 @@ export default function FlightDetails() {
                 <TouchableOpacity
                   style={styleSheet.picker}
                   onPress={() => showDatePickerDeparture('time', 8)}>
-                  <Text style={{fontSize: 20}}>
+                  <Text style={{fontSize: 20, color: 'black'}}>
                     {pdeparturecheck[8] ? pdeparturecheck[8] : 'dd/mm/yy,--:--'}
                   </Text>
                 </TouchableOpacity>
@@ -2557,7 +2557,7 @@ export default function FlightDetails() {
                 <TouchableOpacity
                   style={styleSheet.picker}
                   onPress={() => showDatePickerDeparture('time', 9)}>
-                  <Text style={{fontSize: 20}}>
+                  <Text style={{fontSize: 20, color: 'black'}}>
                     {pdeparturecheck[9] ? pdeparturecheck[9] : 'dd/mm/yy,--:--'}
                   </Text>
                 </TouchableOpacity>
@@ -2572,7 +2572,7 @@ export default function FlightDetails() {
                 <TouchableOpacity
                   style={styleSheet.picker}
                   onPress={() => showDatePickerDeparture('time', 10)}>
-                  <Text style={{fontSize: 20}}>
+                  <Text style={{fontSize: 20, color: 'black'}}>
                     {pdeparturecheck[10]
                       ? pdeparturecheck[10]
                       : 'dd/mm/yy,--:--'}
@@ -2814,7 +2814,7 @@ export default function FlightDetails() {
                 <TouchableOpacity
                   style={styleSheet.picker}
                   onPress={() => showDatePickerDeparture('time', 19)}>
-                  <Text style={{fontSize: 20}}>
+                  <Text style={{fontSize: 20, color: 'black'}}>
                     {pdeparturecheck[19]
                       ? pdeparturecheck[19]
                       : 'dd/mm/yy, -- : --'}
@@ -2894,7 +2894,7 @@ export default function FlightDetails() {
                 <TouchableOpacity
                   style={styleSheet.picker}
                   onPress={() => showDatePickerDepart('time', 1)}>
-                  <Text style={{fontSize: 20}}>
+                  <Text style={{fontSize: 20, color: 'black'}}>
                     {departure[1] ? departure[1] : 'dd/mm/yy, -- : --'}
                   </Text>
                 </TouchableOpacity>
@@ -2911,7 +2911,7 @@ export default function FlightDetails() {
                 <TouchableOpacity
                   style={styleSheet.picker}
                   onPress={() => showDatePickerDepart('time', 2)}>
-                  <Text style={{fontSize: 20}}>
+                  <Text style={{fontSize: 20, color: 'black'}}>
                     {departure[2] ? departure[2] : 'dd/mm/yy, -- : --'}
                   </Text>
                 </TouchableOpacity>
@@ -2937,7 +2937,7 @@ export default function FlightDetails() {
                     borderWidth: 1,
                     borderRadius: 8,
                   }}>
-                  <Text style={{color: 'green'}}>Add Photos</Text>
+                  <Text style={{color: 'green'}}>Take Camera</Text>
                 </TouchableOpacity>
               </View>
               <Text style={styleSheet.label}>Travel Time (Approximate)</Text>
@@ -2959,7 +2959,7 @@ export default function FlightDetails() {
                 <TouchableOpacity
                   style={styleSheet.picker}
                   onPress={() => showDatePickerDepart('time', 4)}>
-                  <Text style={{fontSize: 20}}>
+                  <Text style={{fontSize: 20, color: 'black'}}>
                     {departure[4] ? departure[4] : 'dd/mm/yy, -- : --'}
                   </Text>
                 </TouchableOpacity>
@@ -2976,7 +2976,7 @@ export default function FlightDetails() {
                 <TouchableOpacity
                   style={styleSheet.picker}
                   onPress={() => showDatePickerDepart('time', 5)}>
-                  <Text style={{fontSize: 20}}>
+                  <Text style={{fontSize: 20, color: 'black'}}>
                     {departure[5] ? departure[5] : 'dd/mm/yy, -- : --'}
                   </Text>
                 </TouchableOpacity>
@@ -2991,7 +2991,7 @@ export default function FlightDetails() {
                 <TouchableOpacity
                   style={styleSheet.picker}
                   onPress={() => showDatePickerDepart('time', 6)}>
-                  <Text style={{fontSize: 20}}>
+                  <Text style={{fontSize: 20, color: 'black'}}>
                     {departure[6] ? departure[6] : 'dd/mm/yy, -- : --'}
                   </Text>
                 </TouchableOpacity>
@@ -3008,7 +3008,7 @@ export default function FlightDetails() {
                 <TouchableOpacity
                   style={styleSheet.picker}
                   onPress={() => showDatePickerDepart('time', 7)}>
-                  <Text style={{fontSize: 20}}>
+                  <Text style={{fontSize: 20, color: 'black'}}>
                     {departure[7] ? departure[7] : 'dd/mm/yy, -- : --'}
                   </Text>
                 </TouchableOpacity>
@@ -3025,7 +3025,7 @@ export default function FlightDetails() {
                 <TouchableOpacity
                   style={styleSheet.picker}
                   onPress={() => showDatePickerDepart('time', 8)}>
-                  <Text style={{fontSize: 20}}>
+                  <Text style={{fontSize: 20, color: 'black'}}>
                     {departure[8] ? departure[8] : 'dd/mm/yy, -- : --'}
                   </Text>
                 </TouchableOpacity>
@@ -3040,7 +3040,7 @@ export default function FlightDetails() {
                 <TouchableOpacity
                   style={styleSheet.picker}
                   onPress={() => showDatePickerDepart('time', 9)}>
-                  <Text style={{fontSize: 20}}>
+                  <Text style={{fontSize: 20, color: 'black'}}>
                     {departure[9] ? departure[9] : 'dd/mm/yy, -- : --'}
                   </Text>
                 </TouchableOpacity>
@@ -3070,7 +3070,7 @@ export default function FlightDetails() {
                 <TouchableOpacity
                   style={styleSheet.picker}
                   onPress={() => showDatePickerDepart('time', 10)}>
-                  <Text style={{fontSize: 20}}>
+                  <Text style={{fontSize: 20, color: 'black'}}>
                     {departure[10] ? departure[10] : 'dd/mm/yy, -- : --'}
                   </Text>
                 </TouchableOpacity>
@@ -3085,7 +3085,7 @@ export default function FlightDetails() {
                 <TouchableOpacity
                   style={styleSheet.picker}
                   onPress={() => showDatePickerDepart('time', 11)}>
-                  <Text style={{fontSize: 20}}>
+                  <Text style={{fontSize: 20, color: 'black'}}>
                     {departure[11] ? departure[11] : 'dd/mm/yy, -- : --'}
                   </Text>
                 </TouchableOpacity>
@@ -3129,7 +3129,7 @@ export default function FlightDetails() {
                 <TouchableOpacity
                   style={styleSheet.picker}
                   onPress={() => showDatePickerDepart('time', 13)}>
-                  <Text style={{fontSize: 20}}>
+                  <Text style={{fontSize: 20, color: 'black'}}>
                     {departure[13] ? departure[13] : 'dd/mm/yy, -- : --'}
                   </Text>
                 </TouchableOpacity>
@@ -3144,7 +3144,7 @@ export default function FlightDetails() {
                 <TouchableOpacity
                   style={styleSheet.picker}
                   onPress={() => showDatePickerDepart('time', 14)}>
-                  <Text style={{fontSize: 20}}>
+                  <Text style={{fontSize: 20, color: 'black'}}>
                     {departure[14] ? departure[14] : 'dd/mm/yy, -- : --'}
                   </Text>
                 </TouchableOpacity>
@@ -3159,7 +3159,7 @@ export default function FlightDetails() {
                 <TouchableOpacity
                   style={styleSheet.picker}
                   onPress={() => showDatePickerDepart('time', 15)}>
-                  <Text style={{fontSize: 20}}>
+                  <Text style={{fontSize: 20, color: 'black'}}>
                     {departure[15] ? departure[15] : 'dd/mm/yy, -- : --'}
                   </Text>
                 </TouchableOpacity>
@@ -3185,7 +3185,7 @@ export default function FlightDetails() {
                     borderWidth: 1,
                     borderRadius: 8,
                   }}>
-                  <Text style={{color: 'green'}}>Add photos</Text>
+                  <Text style={{color: 'green'}}>Take Camera</Text>
                 </TouchableOpacity>
               </View>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -3222,7 +3222,7 @@ export default function FlightDetails() {
                 <TouchableOpacity
                   style={styleSheet.picker}
                   onPress={() => showDatePickerDepart('time', 17)}>
-                  <Text style={{fontSize: 20}}>
+                  <Text style={{fontSize: 20, color: 'black'}}>
                     {departure[17] ? departure[17] : 'dd/mm/yy, -- : --'}
                   </Text>
                 </TouchableOpacity>
@@ -3280,7 +3280,7 @@ export default function FlightDetails() {
                 <TouchableOpacity
                   style={styleSheet.picker}
                   onPress={() => showDatePickerDepart('time', 20)}>
-                  <Text style={{fontSize: 20}}>
+                  <Text style={{fontSize: 20, color: 'black'}}>
                     {departure[20] ? departure[20] : 'dd/mm/yy, -- : --'}
                   </Text>
                 </TouchableOpacity>
@@ -3338,7 +3338,7 @@ export default function FlightDetails() {
                 <TouchableOpacity
                   style={styleSheet.picker}
                   onPress={() => showDatePickerDepart('time', 23)}>
-                  <Text style={{fontSize: 20}}>
+                  <Text style={{fontSize: 20, color: 'black'}}>
                     {departure[23] ? departure[23] : 'dd/mm/yy, -- : --'}
                   </Text>
                 </TouchableOpacity>
@@ -3419,7 +3419,7 @@ export default function FlightDetails() {
                     borderWidth: 1,
                     borderRadius: 8,
                   }}>
-                  <Text style={{color: 'green'}}>Add photos</Text>
+                  <Text style={{color: 'green'}}>Take Camera</Text>
                 </TouchableOpacity>
               </View>
               <Text style={styleSheet.label}>Catering Delivey Time</Text>
@@ -3427,7 +3427,7 @@ export default function FlightDetails() {
                 <TouchableOpacity
                   style={styleSheet.picker}
                   onPress={() => showDatePickerDepart('time', 27)}>
-                  <Text style={{fontSize: 20}}>
+                  <Text style={{fontSize: 20, color: 'black'}}>
                     {departure[27] ? departure[27] : 'dd/mm/yy, -- : --'}
                   </Text>
                 </TouchableOpacity>
@@ -3473,7 +3473,7 @@ export default function FlightDetails() {
               <TouchableOpacity
                 style={styleSheet.picker}
                 onPress={() => showDatePickerDepart('time', 30)}>
-                <Text style={{fontSize: 20}}>
+                <Text style={{fontSize: 20, color: 'black'}}>
                   {departure[30] ? departure[30] : 'dd/mm/yy, -- : --'}
                 </Text>
               </TouchableOpacity>
@@ -3533,7 +3533,7 @@ export default function FlightDetails() {
                     borderWidth: 1,
                     borderRadius: 8,
                   }}>
-                  <Text style={{color: 'green'}}>Add photos</Text>
+                  <Text style={{color: 'green'}}>Take Camera</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -3556,7 +3556,7 @@ export default function FlightDetails() {
                 <TouchableOpacity
                   style={styleSheet.picker}
                   onPress={() => showDatePickerDepart('time', 33)}>
-                  <Text style={{fontSize: 20}}>
+                  <Text style={{fontSize: 20, color: 'black'}}>
                     {departure[33] ? departure[33] : 'dd/mm/yy, -- : --'}
                   </Text>
                 </TouchableOpacity>
@@ -3585,7 +3585,7 @@ export default function FlightDetails() {
                 <TouchableOpacity
                   style={styleSheet.picker}
                   onPress={() => showDatePickerDepart('time', 35)}>
-                  <Text style={{fontSize: 20}}>
+                  <Text style={{fontSize: 20, color: 'black'}}>
                     {departure[35] ? departure[35] : 'dd/mm/yy, -- : --'}
                   </Text>
                 </TouchableOpacity>
@@ -3602,7 +3602,7 @@ export default function FlightDetails() {
                 <TouchableOpacity
                   style={styleSheet.picker}
                   onPress={() => showDatePickerDepart('time', 36)}>
-                  <Text style={{fontSize: 20}}>
+                  <Text style={{fontSize: 20, color: 'black'}}>
                     {departure[36] ? departure[36] : 'dd/mm/yy, -- : --'}
                   </Text>
                 </TouchableOpacity>
@@ -3617,7 +3617,7 @@ export default function FlightDetails() {
                 <TouchableOpacity
                   style={styleSheet.picker}
                   onPress={() => showDatePickerDepart('time', 37)}>
-                  <Text style={{fontSize: 20}}>
+                  <Text style={{fontSize: 20, color: 'black'}}>
                     {departure[37] ? departure[37] : 'dd/mm/yy, -- : --'}
                   </Text>
                 </TouchableOpacity>
@@ -3632,7 +3632,7 @@ export default function FlightDetails() {
                 <TouchableOpacity
                   style={styleSheet.picker}
                   onPress={() => showDatePickerDepart('time', 38)}>
-                  <Text style={{fontSize: 20}}>
+                  <Text style={{fontSize: 20, color: 'black'}}>
                     {departure[38] ? departure[38] : 'dd/mm/yy, -- : --'}
                   </Text>
                 </TouchableOpacity>
@@ -3649,7 +3649,7 @@ export default function FlightDetails() {
                 <TouchableOpacity
                   style={styleSheet.picker}
                   onPress={() => showDatePickerDepart('time', 39)}>
-                  <Text style={{fontSize: 20}}>
+                  <Text style={{fontSize: 20, color: 'black'}}>
                     {departure[39] ? departure[39] : 'dd/mm/yy, -- : --'}
                   </Text>
                 </TouchableOpacity>
@@ -3666,7 +3666,7 @@ export default function FlightDetails() {
                 <TouchableOpacity
                   style={styleSheet.picker}
                   onPress={() => showDatePickerDepart('time', 40)}>
-                  <Text style={{fontSize: 20}}>
+                  <Text style={{fontSize: 20, color: 'black'}}>
                     {departure[40] ? departure[40] : 'dd/mm/yy, -- : --'}
                   </Text>
                 </TouchableOpacity>
@@ -3681,7 +3681,7 @@ export default function FlightDetails() {
                 <TouchableOpacity
                   style={styleSheet.picker}
                   onPress={() => showDatePickerDepart('time', 41)}>
-                  <Text style={{fontSize: 20}}>
+                  <Text style={{fontSize: 20, color: 'black'}}>
                     {departure[41] ? departure[41] : 'dd/mm/yy, -- : --'}
                   </Text>
                 </TouchableOpacity>
@@ -3699,7 +3699,7 @@ export default function FlightDetails() {
               <TouchableOpacity
                 style={styleSheet.picker}
                 onPress={() => showDatePickerDepart('time', 42)}>
-                <Text style={{fontSize: 20}}>
+                <Text style={{fontSize: 20, color: 'black'}}>
                   {departure[42] ? departure[42] : 'dd/mm/yy, -- : --'}
                 </Text>
               </TouchableOpacity>
@@ -3714,7 +3714,7 @@ export default function FlightDetails() {
               <TouchableOpacity
                 style={styleSheet.picker}
                 onPress={() => showDatePickerDepart('time', 43)}>
-                <Text style={{fontSize: 20}}>
+                <Text style={{fontSize: 20, color: 'black'}}>
                   {departure[43] ? departure[43] : 'dd/mm/yy, -- : --'}
                 </Text>
               </TouchableOpacity>
@@ -3729,7 +3729,7 @@ export default function FlightDetails() {
               <TouchableOpacity
                 style={styleSheet.picker}
                 onPress={() => showDatePickerDepart('time', 44)}>
-                <Text style={{fontSize: 20}}>
+                <Text style={{fontSize: 20, color: 'black'}}>
                   {departure[44] ? departure[44] : 'dd/mm/yy, -- : --'}
                 </Text>
               </TouchableOpacity>
@@ -3744,7 +3744,7 @@ export default function FlightDetails() {
               <TouchableOpacity
                 style={styleSheet.picker}
                 onPress={() => showDatePickerDepart('time', 45)}>
-                <Text style={{fontSize: 20}}>
+                <Text style={{fontSize: 20, color: 'black'}}>
                   {departure[45] ? departure[45] : 'dd/mm/yy, -- : --'}
                 </Text>
               </TouchableOpacity>
@@ -3790,7 +3790,7 @@ export default function FlightDetails() {
                   borderWidth: 1,
                   borderRadius: 8,
                 }}>
-                <Text style={{color: 'green'}}>Add Photos</Text>
+                <Text style={{color: 'green'}}>Take Camera</Text>
               </TouchableOpacity>
             </View>
             {/*   ------------------------------Services Verified ----------- */}
@@ -3810,7 +3810,7 @@ export default function FlightDetails() {
                 <TouchableOpacity
                   style={styleSheet.picker}
                   onPress={() => showDatePickerPostDepart('time', 0)}>
-                  <Text style={{fontSize: 20}}>
+                  <Text style={{fontSize: 20, color: 'black'}}>
                     {postdeparture[0] ? postdeparture[0] : 'dd/mm/yy, -- : --'}
                   </Text>
                 </TouchableOpacity>
@@ -3913,6 +3913,7 @@ const styleSheet = StyleSheet.create({
   },
   label: {
     fontSize: 15,
+    color: 'black',
   },
   button: {
     flex: 1,
@@ -3925,6 +3926,7 @@ const styleSheet = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
+    color: 'black',
   },
 
   titleText: {
@@ -3933,6 +3935,7 @@ const styleSheet = StyleSheet.create({
     padding: 12,
     marginVertical: 20,
     paddingHorizontal: 20,
+    color: 'black',
   },
 
   item: {
@@ -3952,6 +3955,7 @@ const styleSheet = StyleSheet.create({
     borderRadius: 8,
     marginVertical: 10,
     textAlignVertical: 'top',
+    color: 'black',
   },
   picker: {
     flex: 1,
@@ -3979,5 +3983,6 @@ const styleSheet = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.2)',
     padding: 10,
     flex: 1,
+    color: 'black',
   },
 });

@@ -56,12 +56,14 @@ export default function Flights({navigation}) {
           <Text style={{color: 'white', fontSize: 25}}>A</Text>
         </View>
         <View>
-          <Text style={{fontSize: 15}}>N123AB</Text>
-          <Text style={{fontSize: 15}}>
+          <Text style={{fontSize: 15, color: 'black'}}>N123AB</Text>
+          <Text style={{fontSize: 15, color: 'black'}}>
             4 <Icons color="black" name="user-nurse" size={15} /> 4{' '}
             <Icons color="black" name="user-friends" size={15} />
           </Text>
-          <Text style={{fontSize: 15}}>20 Aug 2022, 13:00:00</Text>
+          <Text style={{fontSize: 15, color: 'black'}}>
+            20 Aug 2022, 13:00:00
+          </Text>
         </View>
       </View>
       <Icons color="black" name="chevron-right" size={20} />
@@ -90,7 +92,9 @@ export default function Flights({navigation}) {
   );
   return (
     <View style={styles.container}>
-      <Text style={{fontSize: 30, marginLeft: 10}}>Flights Details</Text>
+      <Text style={{fontSize: 30, marginLeft: 10, color: 'black'}}>
+        Flights Details
+      </Text>
       <SwipeListView
         data={listData}
         renderItem={renderItem}

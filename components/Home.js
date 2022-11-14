@@ -85,7 +85,12 @@ export default function Home({navigation}) {
       <StatusBar backgroundColor="white" barStyle="dark-content" />
       <View style={styles.container}>
         <Text
-          style={{textAlign: 'left', fontSize: width / 15, fontWeight: 'bold'}}>
+          style={{
+            textAlign: 'left',
+            fontSize: width / 15,
+            fontWeight: 'bold',
+            color: 'black',
+          }}>
           Hello,Bob
         </Text>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
