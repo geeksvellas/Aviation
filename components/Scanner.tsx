@@ -271,7 +271,6 @@ export default function ScannerScreen({route, navigation}) {
             preserveAspectRatio="xMidYMid slice"
             style={StyleSheet.absoluteFill}
             viewBox={getViewBox()}>
-            <Text>{'This is error:' + errorMsg}</Text>
             <Rect
               x={(scanRegion.left / 100) * getFrameSize().width}
               y={(scanRegion.top / 100) * getFrameSize().height}

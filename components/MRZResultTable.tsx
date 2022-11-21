@@ -38,7 +38,7 @@ export const MRZResultTable = (props: {
       let fields: any = {};
       try {
         const result = parse(raw);
-        console.log(result);
+        console.log(result.details[10].ranges);
         fields['Document Code'] = result['fields']['documentCode'];
         fields['Document Number'] = result['fields']['documentNumber'];
         fields['First Name'] = result['fields']['firstName'];
@@ -59,7 +59,7 @@ export const MRZResultTable = (props: {
           '/' +
           expDate.substring(2, 4) +
           '/' +
-          formatYear(expDate.substring(0, 2));
+          expDate.substring(0, 2);
         // if (result['valid'] === true) {
         //   fields['Valid'] = 'True';
         // } else {
