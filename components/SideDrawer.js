@@ -9,67 +9,124 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 const Drawer = createDrawerNavigator();
 export function SideDrawer(props) {
+  const [current, setcurrent] = useState(0);
   return (
     <DrawerContentScrollView {...props}>
       <View style={styles.drawerContent}>
-        {/* <Drawer.Section style={styles.drawerSection}> */}
         <DrawerItem
-          icon={({color, size}) => (
-            <Icon name="home" color={color} size={size} />
-          )}
-          label="Flight Details"
-          labelStyle={styles.drawerLabel}
-          onPress={() => {
-            props.navigation.reset({
-              index: 0,
-              routes: [{name: 'FlightDetails'}],
-            });
-            props.navigation.closeDrawer();
-          }}
-        />
-        <DrawerItem
-          icon={({color, size}) => (
-            <Icon name="home" color={color} size={size} />
-          )}
+          // icon={({color, size}) => (
+          //   <Icon name="home" color={color} size={size} />
+          // )}
           label="Flight Preparation"
-          labelStyle={styles.drawerLabel}
+          labelStyle={[
+            styles.drawerLabel,
+            current == 0 ? {color: 'green'} : {color: 'black'},
+          ]}
           onPress={() => {
             props.navigation.reset({
               index: 0,
               routes: [{name: 'FlightPreparation'}],
             });
             props.navigation.closeDrawer();
+            setcurrent(0);
           }}
         />
         <DrawerItem
-          icon={({color, size}) => (
-            <Icon name="home" color={color} size={size} />
-          )}
+          // icon={({color, size}) => (
+          //   <Icon name="home" color={color} size={size} />
+          // )}
           label="Pre Arrival"
-          labelStyle={styles.drawerLabel}
+          labelStyle={[
+            styles.drawerLabel,
+            current == 1 ? {color: 'green'} : {color: 'black'},
+          ]}
           onPress={() => {
             props.navigation.reset({
               index: 0,
               routes: [{name: 'PreArrival'}],
             });
             props.navigation.closeDrawer();
+            setcurrent(1);
           }}
         />
         <DrawerItem
-          icon={({color, size}) => (
-            <Icon name="home" color={color} size={size} />
-          )}
+          // icon={({color, size}) => (
+          //   <Icon name="home" color={color} size={size} />
+          // )}
           label="Arrival Service"
-          labelStyle={styles.drawerLabel}
+          labelStyle={[
+            styles.drawerLabel,
+            current == 2 ? {color: 'green'} : {color: 'black'},
+          ]}
           onPress={() => {
             props.navigation.reset({
               index: 0,
               routes: [{name: 'ArrivalService'}],
             });
             props.navigation.closeDrawer();
+            setcurrent(2);
           }}
         />
-        {/* </Drawer.Section> */}
+        <DrawerItem
+          label="Interim Service"
+          labelStyle={[
+            styles.drawerLabel,
+            current == 3 ? {color: 'green'} : {color: 'black'},
+          ]}
+          onPress={() => {
+            props.navigation.reset({
+              index: 0,
+              routes: [{name: 'InterimService'}],
+            });
+            props.navigation.closeDrawer();
+            setcurrent(3);
+          }}
+        />
+        <DrawerItem
+          label="Pre-Departure Checklist"
+          labelStyle={[
+            styles.drawerLabel,
+            current == 4 ? {color: 'green'} : {color: 'black'},
+          ]}
+          onPress={() => {
+            props.navigation.reset({
+              index: 0,
+              routes: [{name: 'PreDepartureChecklist'}],
+            });
+            props.navigation.closeDrawer();
+            setcurrent(4);
+          }}
+        />
+        <DrawerItem
+          label="Departure"
+          labelStyle={[
+            styles.drawerLabel,
+            current == 5 ? {color: 'green'} : {color: 'black'},
+          ]}
+          onPress={() => {
+            props.navigation.reset({
+              index: 0,
+              routes: [{name: 'Departure'}],
+            });
+            props.navigation.closeDrawer();
+            setcurrent(5);
+          }}
+        />
+        <DrawerItem
+          label="Post Departure"
+          labelStyle={[
+            styles.drawerLabel,
+            current == 6 ? {color: 'green'} : {color: 'black'},
+          ]}
+          onPress={() => {
+            props.navigation.reset({
+              index: 0,
+              routes: [{name: 'PostDeparture'}],
+            });
+            props.navigation.closeDrawer();
+            setcurrent(6);
+          }}
+        />
       </View>
     </DrawerContentScrollView>
   );
