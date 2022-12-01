@@ -77,7 +77,7 @@ export default function Aircrafts() {
   return (
     <View style={styles.container}>
       <Text style={{fontSize: 30, marginLeft: 10, color: 'black'}}>
-        Aircrafts Details
+        Aircraft Details
       </Text>
       <SwipeListView
         data={listData}

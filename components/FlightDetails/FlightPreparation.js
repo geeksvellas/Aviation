@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   TextInput,
   ScrollView,
+  Dimensions,
 } from 'react-native';
 import React, {useState} from 'react';
 import Loader from '../Loader';
@@ -79,7 +80,12 @@ export default function FlightPreparation({navigation}) {
           }}>
           <Icons name="menu" color="green" size={30} />
         </TouchableOpacity>
-        <Text style={{fontSize: 24, fontWeight: 'bold', color: 'black'}}>
+        <Text
+          style={{
+            fontSize: Dimensions.get('window').width / 15,
+            fontWeight: 'bold',
+            color: 'black',
+          }}>
           Flight Preparation
         </Text>
         <TouchableOpacity style={{marginRight: 20}}>
@@ -305,7 +311,7 @@ export default function FlightPreparation({navigation}) {
             })}
           </View>
         )}
-        <View style={{flexDirection: 'row', marginTop: 10}}>
+        {/* <View style={{flexDirection: 'row', marginTop: 10}}>
           <TouchableOpacity style={[styleSheet.button, {marginRight: 10}]}>
             <Text style={{color: 'white', textAlign: 'center'}}>Save</Text>
           </TouchableOpacity>
@@ -314,7 +320,7 @@ export default function FlightPreparation({navigation}) {
             style={[styleSheet.button, {marginLeft: 10}]}>
             <Text style={{color: 'white', textAlign: 'center'}}>Submit</Text>
           </TouchableOpacity>
-        </View>
+        </View> */}
       </View>
     </ScrollView>
   );
@@ -322,7 +328,7 @@ export default function FlightPreparation({navigation}) {
 
 const styleSheet = StyleSheet.create({
   label: {
-    fontSize: 15,
+    fontSize: Dimensions.get('window').width / 25,
     color: 'black',
   },
   button: {

@@ -8,7 +8,7 @@ import {
   TextInput,
   Button,
   Switch,
-  Alert,
+  Dimensions,
   ScrollView,
 } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
@@ -27,9 +27,13 @@ export default function PostDeparture({navigation}) {
     null,
     null,
   ]);
-  const tConvert = time => {
-    time = time.split(':');
-    return time[0] + ':' + time[1] + ' ' + time[2].split(' ')[1];
+  const tConvert = datetime => {
+    var date = datetime.split(',')[0].split('/');
+    var time24 = datetime.split(', ')[1];
+    var time = time24.split(':');
+    return (
+      date[1] + '/' + date[0] + '/' + date[2] + ', ' + time[0] + ':' + time[1]
+    );
   };
   const [isDatePickerVisiblePostDepart, setDatePickerVisibilityPostDepart] =
     useState(false);
@@ -46,19 +50,21 @@ export default function PostDeparture({navigation}) {
   const handleConfirmPostDepart = date => {
     // console.log("A date has been picked: ",date);
     var tpostdeparture = [...postdeparture];
-    tpostdeparture[currentDepart.current] =
-      new Date(date).toLocaleDateString() +
-      ',' +
-      tConvert(new Date(date).toLocaleTimeString());
+    tpostdeparture[currentDepart.current] = tConvert(
+      new Date(date).toLocaleString('en-US', {
+        hour12: false,
+      }),
+    );
     setpostdeparture(tpostdeparture);
     hideDatePickerPostDepart();
   };
   const setNowPostDepart = index => {
     var tpostdeparture = [...postdeparture];
-    tpostdeparture[index] =
-      new Date().toLocaleDateString() +
-      ',' +
-      tConvert(new Date().toLocaleTimeString());
+    tpostdeparture[index] = tConvert(
+      new Date().toLocaleString('en-US', {
+        hour12: false,
+      }),
+    );
     setpostdeparture(tpostdeparture);
   };
   const onPressDocPreA = async index => {
@@ -210,7 +216,13 @@ export default function PostDeparture({navigation}) {
             <TouchableOpacity
               onPress={() => setNowPostDepart(1)}
               style={{padding: 10}}>
-              <Text style={{fontSize: 20, color: 'green'}}>Now</Text>
+              <Text
+                style={{
+                  fontSize: Dimensions.get('window').width / 25,
+                  color: 'green',
+                }}>
+                Time Now
+              </Text>
             </TouchableOpacity>
           </View>
           <Text style={styleSheet.label}>Name of Verifier</Text>
@@ -264,7 +276,7 @@ const styleSheet = StyleSheet.create({
     backgroundColor: 'red',
   },
   label: {
-    fontSize: 15,
+    fontSize: Dimensions.get('window').width / 25,
     color: 'black',
   },
   button: {

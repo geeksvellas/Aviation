@@ -27,7 +27,7 @@ export default function InterimService({navigation}) {
     setIservices(service);
   };
   return (
-    <ScrollView>
+    <View>
       <View
         style={{
           flexDirection: 'row',
@@ -49,86 +49,93 @@ export default function InterimService({navigation}) {
           <Icons name="content-save" color="green" size={30} />
         </TouchableOpacity>
       </View>
-      <View style={{padding: 10}}>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}>
-          <TouchableOpacity
-            onPress={onAddServices}
-            style={[styleSheet.button, {marginHorizontal: 30}]}>
-            <Text style={{color: 'white', textAlign: 'center'}}>
-              Add Service
-            </Text>
-          </TouchableOpacity>
+      <ScrollView>
+        <View style={{padding: 10}}>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}>
+            <TouchableOpacity
+              onPress={onAddServices}
+              style={[styleSheet.button, {marginHorizontal: 30}]}>
+              <Text style={{color: 'white', textAlign: 'center'}}>
+                Add Service
+              </Text>
+            </TouchableOpacity>
+          </View>
+          {Iservices.length > 0 && (
+            <>
+              <View
+                style={{
+                  borderColor: 'rgba(0,0,0,0.5)',
+                  padding: 10,
+                  borderRadius: 10,
+                  marginVertical: 10,
+                }}>
+                {Iservices.map((val, index) => {
+                  return (
+                    <View
+                      key={index}
+                      style={{
+                        borderBottomWidth: 1,
+                        marginVertical: 10,
+                        borderBottomColor: 'rgba(0,0,0,0.3)',
+                      }}>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                        }}>
+                        <Text style={styleSheet.label}>Services Provided</Text>
+                        <TouchableOpacity
+                          style={styleSheet.label}
+                          onPress={() => onRemoveService(index)}>
+                          <Icons
+                            name="minus-box-outline"
+                            color="red"
+                            size={30}
+                          />
+                        </TouchableOpacity>
+                      </View>
+                      <View
+                        style={{flexDirection: 'row', alignItems: 'center'}}>
+                        <TextInput
+                          style={styleSheet.input}
+                          value={Iservices[index].service}
+                          onChangeText={text =>
+                            onChangeService(text, index, 'service')
+                          }
+                        />
+                      </View>
+                      <Text style={styleSheet.label}>Additional Remarks</Text>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          marginBottom: 10,
+                        }}>
+                        <TextInput
+                          style={styleSheet.input}
+                          multiline={true}
+                          numberOfLines={2}
+                          value={Iservices[index].remarks}
+                          onChangeText={text =>
+                            onChangeService(text, index, 'remarks')
+                          }
+                        />
+                      </View>
+                    </View>
+                  );
+                })}
+              </View>
+            </>
+          )}
         </View>
-        {Iservices.length > 0 && (
-          <>
-            <View
-              style={{
-                borderColor: 'rgba(0,0,0,0.5)',
-                padding: 10,
-                borderRadius: 10,
-                marginVertical: 10,
-              }}>
-              {Iservices.map((val, index) => {
-                return (
-                  <View
-                    key={index}
-                    style={{
-                      borderBottomWidth: 1,
-                      marginVertical: 10,
-                      borderBottomColor: 'rgba(0,0,0,0.3)',
-                    }}>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                      }}>
-                      <Text style={styleSheet.label}>Services Provided</Text>
-                      <TouchableOpacity
-                        style={styleSheet.label}
-                        onPress={() => onRemoveService(index)}>
-                        <Icons name="minus-box-outline" color="red" size={30} />
-                      </TouchableOpacity>
-                    </View>
-                    <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                      <TextInput
-                        style={styleSheet.input}
-                        value={Iservices[index].service}
-                        onChangeText={text =>
-                          onChangeService(text, index, 'service')
-                        }
-                      />
-                    </View>
-                    <Text style={styleSheet.label}>Additional Remarks</Text>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        marginBottom: 10,
-                      }}>
-                      <TextInput
-                        style={styleSheet.input}
-                        multiline={true}
-                        numberOfLines={2}
-                        value={Iservices[index].remarks}
-                        onChangeText={text =>
-                          onChangeService(text, index, 'remarks')
-                        }
-                      />
-                    </View>
-                  </View>
-                );
-              })}
-            </View>
-          </>
-        )}
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 }
 

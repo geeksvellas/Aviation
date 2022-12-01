@@ -1,5 +1,5 @@
 import React, {Component, useState} from 'react';
-import {View, StyleSheet, Dimensions} from 'react-native';
+import {View, StyleSheet, Dimensions, Text} from 'react-native';
 import {
   createDrawerNavigator,
   DrawerContentScrollView,
@@ -13,6 +13,15 @@ export function SideDrawer(props) {
   return (
     <DrawerContentScrollView {...props}>
       <View style={styles.drawerContent}>
+        <Text
+          style={{
+            fontSize: 24,
+            fontWeight: 'bold',
+            color: 'black',
+            padding: 10,
+          }}>
+          Flight Section
+        </Text>
         <DrawerItem
           // icon={({color, size}) => (
           //   <Icon name="home" color={color} size={size} />

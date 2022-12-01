@@ -11,10 +11,15 @@ import {
 } from 'react-native';
 
 const {width} = Dimensions.get('window');
-export default function Feedback({visible, onCloseFeedback, onSubmitFeedback}) {
+export default function Feedback({
+  visible,
+  onCloseFeedback,
+  onSubmitFeedback,
+  value,
+}) {
   const [textInput, settextInput] = useState(null);
   useEffect(() => {
-    settextInput(null);
+    settextInput(value);
   }, [visible]);
   return (
     <Modal animationType="fade" transparent={true} visible={visible}>
@@ -35,25 +40,41 @@ export default function Feedback({visible, onCloseFeedback, onSubmitFeedback}) {
             borderRadius: 8,
             padding: 20,
           }}>
-          <Text style={{fontSize: 20}}>Feedback</Text>
+          <Text style={{fontSize: Dimensions.get('window').width / 18}}>
+            Feedback
+          </Text>
           <TextInput
             value={textInput}
             style={styles.input}
             multiline={true}
             numberOfLines={3}
-            onChangeText={(text) => settextInput(text)}
+            onChangeText={text => settextInput(text)}
             placeholder="Give your feedback"
           />
           <View style={{flexDirection: 'row', marginTop: 10}}>
             <TouchableOpacity
               onPress={onCloseFeedback}
               style={[styles.button, {marginRight: 10}]}>
-              <Text style={{color: 'white', textAlign: 'center'}}>Cancel</Text>
+              <Text
+                style={{
+                  color: 'white',
+                  textAlign: 'center',
+                  fontSize: Dimensions.get('window').width / 25,
+                }}>
+                Cancel
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => onSubmitFeedback(textInput)}
               style={[styles.button, {marginLeft: 10}]}>
-              <Text style={{color: 'white', textAlign: 'center'}}>Submit</Text>
+              <Text
+                style={{
+                  color: 'white',
+                  textAlign: 'center',
+                  fontSize: Dimensions.get('window').width / 25,
+                }}>
+                Submit
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -68,6 +89,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginVertical: 10,
     textAlignVertical: 'top',
+    fontSize: Dimensions.get('window').width / 25,
   },
   button: {
     flex: 1,
