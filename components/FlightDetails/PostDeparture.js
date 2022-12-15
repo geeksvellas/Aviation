@@ -204,7 +204,7 @@ export default function PostDeparture({navigation}) {
             borderRadius: 10,
             marginVertical: 10,
           }}>
-          <Text style={styleSheet.label}>Time Verified</Text>
+          <Text style={styleSheet.label}>Time Verified (Local Time)</Text>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <TouchableOpacity
               style={styleSheet.picker}

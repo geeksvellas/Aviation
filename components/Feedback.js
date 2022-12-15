@@ -40,7 +40,11 @@ export default function Feedback({
             borderRadius: 8,
             padding: 20,
           }}>
-          <Text style={{fontSize: Dimensions.get('window').width / 18}}>
+          <Text
+            style={{
+              fontSize: Dimensions.get('window').width / 18,
+              color: 'black',
+            }}>
             Feedback
           </Text>
           <TextInput
@@ -90,6 +94,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     textAlignVertical: 'top',
     fontSize: Dimensions.get('window').width / 25,
+    color: 'black',
   },
   button: {
     flex: 1,

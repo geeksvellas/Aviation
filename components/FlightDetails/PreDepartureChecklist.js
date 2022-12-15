@@ -24,7 +24,9 @@ export default function PreDepartureChecklist({navigation}) {
   const currentDeparture = useRef(0);
   const [pdeparturecheck, setpdeparturecheck] = useState([
     null,
+    null,
     {value: null, file: []},
+    null,
     null,
     null,
     null,
@@ -195,6 +197,19 @@ export default function PreDepartureChecklist({navigation}) {
               }}
             />
           </View>
+          <Text style={styleSheet.label}>Pax Meeting Location</Text>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <TextInput
+              style={styleSheet.input}
+              value={pdeparturecheck[1]}
+              onChangeText={text => {
+                var tpdeparturecheck = [...pdeparturecheck];
+                tpdeparturecheck[1] = text;
+                setpdeparturecheck(tpdeparturecheck);
+              }}
+            />
+          </View>
+
           <View
             style={{
               flexDirection: 'row',
@@ -204,7 +219,7 @@ export default function PreDepartureChecklist({navigation}) {
             }}>
             <Text style={styleSheet.label}>Photo of Meeting Location</Text>
             <TouchableOpacity
-              onPress={event => onPressDocPreA(1)}
+              onPress={event => onPressDocPreA(2)}
               style={{
                 marginLeft: 10,
                 paddingVertical: 5,
@@ -215,9 +230,9 @@ export default function PreDepartureChecklist({navigation}) {
               <Text style={{color: 'green'}}>Take Camera</Text>
             </TouchableOpacity>
           </View>
-          {pdeparturecheck[1].file.length > 0 && (
+          {pdeparturecheck[2].file.length > 0 && (
             <View style={{marginBottom: 20}}>
-              {pdeparturecheck[1].file.map((value, index) => {
+              {pdeparturecheck[2].file.map((value, index) => {
                 return (
                   <View
                     key={index}
@@ -243,7 +258,7 @@ export default function PreDepartureChecklist({navigation}) {
                       }),
                     }}>
                     <Text style={{color: 'black'}}>{value.name}</Text>
-                    <TouchableOpacity onPress={() => removeFilePreA(1, index)}>
+                    <TouchableOpacity onPress={() => removeFilePreA(2, index)}>
                       <Icons
                         style={{color: 'green', marginLeft: 10}}
                         name="close"
@@ -255,17 +270,7 @@ export default function PreDepartureChecklist({navigation}) {
               })}
             </View>
           )}
-          <Text style={styleSheet.label}>Actual Pickup Time</Text>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <TouchableOpacity
-              style={styleSheet.picker}
-              onPress={() => showDatePickerDeparture('datetime', 2)}>
-              <Text style={{fontSize: 20, color: 'black'}}>
-                {pdeparturecheck[2] ? pdeparturecheck[2] : 'dd/mm/yy, -- : --'}
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <Text style={styleSheet.label}>Confirm Catering Delivery Time</Text>
+          <Text style={styleSheet.label}>Crew Pickup Time (Local Time)</Text>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <TouchableOpacity
               style={styleSheet.picker}
@@ -274,8 +279,30 @@ export default function PreDepartureChecklist({navigation}) {
                 {pdeparturecheck[3] ? pdeparturecheck[3] : 'dd/mm/yy, -- : --'}
               </Text>
             </TouchableOpacity>
+          </View>
+          <Text style={styleSheet.label}>Pax Pickup Time (Local Time)</Text>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <TouchableOpacity
-              onPress={() => setNowDeparture(3)}
+              style={styleSheet.picker}
+              onPress={() => showDatePickerDeparture('datetime', 4)}>
+              <Text style={{fontSize: 20, color: 'black'}}>
+                {pdeparturecheck[4] ? pdeparturecheck[4] : 'dd/mm/yy, -- : --'}
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <Text style={styleSheet.label}>
+            Confirm Catering Delivery Time (Local Time)
+          </Text>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <TouchableOpacity
+              style={styleSheet.picker}
+              onPress={() => showDatePickerDeparture('datetime', 5)}>
+              <Text style={{fontSize: 20, color: 'black'}}>
+                {pdeparturecheck[5] ? pdeparturecheck[5] : 'dd/mm/yy, -- : --'}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => setNowDeparture(5)}
               style={{padding: 10}}>
               <Text
                 style={{
@@ -286,17 +313,17 @@ export default function PreDepartureChecklist({navigation}) {
               </Text>
             </TouchableOpacity>
           </View>
-          <Text style={styleSheet.label}>Fuelling Time</Text>
+          <Text style={styleSheet.label}>Fuelling Time (Local Time)</Text>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <TouchableOpacity
               style={styleSheet.picker}
-              onPress={() => showDatePickerDeparture('datetime', 4)}>
+              onPress={() => showDatePickerDeparture('datetime', 6)}>
               <Text style={{fontSize: 20, color: 'black'}}>
-                {pdeparturecheck[4] ? pdeparturecheck[4] : 'dd/mm/yy, -- : --'}
+                {pdeparturecheck[6] ? pdeparturecheck[6] : 'dd/mm/yy, -- : --'}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => setNowDeparture(4)}
+              onPress={() => setNowDeparture(6)}
               style={{padding: 10}}>
               <Text
                 style={{
@@ -309,11 +336,11 @@ export default function PreDepartureChecklist({navigation}) {
           </View>
           <View style={styleSheet.toggleContainer}>
             <TouchableOpacity
-              onPress={event => setCheckedDeparture(5)}
+              onPress={event => setCheckedDeparture(7)}
               style={[
                 styleSheet.toggleButton,
                 {
-                  backgroundColor: pdeparturecheck[5].checked
+                  backgroundColor: pdeparturecheck[7].checked
                     ? 'green'
                     : 'white',
                 },
@@ -323,13 +350,13 @@ export default function PreDepartureChecklist({navigation}) {
                   styleSheet.label,
                   {
                     textAlign: 'center',
-                    color: pdeparturecheck[5].checked ? 'white' : 'black',
+                    color: pdeparturecheck[7].checked ? 'white' : 'black',
                   },
                 ]}>
                 Prepared Departure GenDec
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => getFeedback(5)}>
+            <TouchableOpacity onPress={() => getFeedback(7)}>
               <Icons
                 style={{marginLeft: 10}}
                 name="comment-processing-outline"
@@ -338,12 +365,12 @@ export default function PreDepartureChecklist({navigation}) {
               />
             </TouchableOpacity>
           </View>
-          {pdeparturecheck[5].remarks && (
+          {pdeparturecheck[7].remarks && (
             <View style={{flexDirection: 'row', marginBottom: 20}}>
               <View style={styleSheet.remarks}>
-                <Text>{pdeparturecheck[5].remarks}</Text>
+                <Text>{pdeparturecheck[7].remarks}</Text>
               </View>
-              <TouchableOpacity onPress={() => removeFeedback(5)}>
+              <TouchableOpacity onPress={() => removeFeedback(7)}>
                 <Icons
                   style={{marginLeft: 10}}
                   name="delete-circle-outline"
@@ -362,7 +389,7 @@ export default function PreDepartureChecklist({navigation}) {
             }}>
             <Text style={styleSheet.label}>Upload Departure GenDec</Text>
             <TouchableOpacity
-              onPress={event => onPressDocPreA(6)}
+              onPress={event => onPressDocPreA(8)}
               style={{
                 marginLeft: 10,
                 paddingVertical: 5,
@@ -373,9 +400,9 @@ export default function PreDepartureChecklist({navigation}) {
               <Text style={{color: 'green'}}>Add Files</Text>
             </TouchableOpacity>
           </View>
-          {pdeparturecheck[6].file.length > 0 && (
+          {pdeparturecheck[8].file.length > 0 && (
             <View style={{marginBottom: 20}}>
-              {pdeparturecheck[6].file.map((value, index) => {
+              {pdeparturecheck[8].file.map((value, index) => {
                 return (
                   <View
                     key={index}
@@ -401,7 +428,7 @@ export default function PreDepartureChecklist({navigation}) {
                       }),
                     }}>
                     <Text style={{color: 'black'}}>{value.name}</Text>
-                    <TouchableOpacity onPress={() => removeFilePreA(6, index)}>
+                    <TouchableOpacity onPress={() => removeFilePreA(8, index)}>
                       <Icons
                         style={{color: 'green', marginLeft: 10}}
                         name="close"
@@ -423,49 +450,9 @@ export default function PreDepartureChecklist({navigation}) {
               borderRadius: 10,
               marginVertical: 10,
             }}>
-            <Text style={styleSheet.label}>Flight Documents Received</Text>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <TouchableOpacity
-                style={styleSheet.picker}
-                onPress={() => showDatePickerDeparture('time', 7)}>
-                <Text style={{fontSize: 20, color: 'black'}}>
-                  {pdeparturecheck[7] ? pdeparturecheck[7] : 'dd/mm/yy,--:--'}
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => setNowDeparture(7)}
-                style={{padding: 10}}>
-                <Text
-                  style={{
-                    fontSize: Dimensions.get('window').width / 25,
-                    color: 'green',
-                  }}>
-                  Time Now
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <Text style={styleSheet.label}>Flight Documents Printed </Text>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <TouchableOpacity
-                style={styleSheet.picker}
-                onPress={() => showDatePickerDeparture('time', 8)}>
-                <Text style={{fontSize: 20, color: 'black'}}>
-                  {pdeparturecheck[8] ? pdeparturecheck[8] : 'dd/mm/yy,--:--'}
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => setNowDeparture(8)}
-                style={{padding: 10}}>
-                <Text
-                  style={{
-                    fontSize: Dimensions.get('window').width / 25,
-                    color: 'green',
-                  }}>
-                  Time Now
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <Text style={styleSheet.label}>Notams Updated </Text>
+            <Text style={styleSheet.label}>
+              Flight Documents Received (Local Time)
+            </Text>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <TouchableOpacity
                 style={styleSheet.picker}
@@ -486,7 +473,9 @@ export default function PreDepartureChecklist({navigation}) {
                 </Text>
               </TouchableOpacity>
             </View>
-            <Text style={styleSheet.label}>Weather Information Updated </Text>
+            <Text style={styleSheet.label}>
+              Flight Documents Printed (Local Time)
+            </Text>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <TouchableOpacity
                 style={styleSheet.picker}
@@ -507,7 +496,7 @@ export default function PreDepartureChecklist({navigation}) {
                 </Text>
               </TouchableOpacity>
             </View>
-            <Text style={styleSheet.label}>ATC Flight Plan Filed </Text>
+            <Text style={styleSheet.label}>Notams Updated (Local Time)</Text>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <TouchableOpacity
                 style={styleSheet.picker}
@@ -528,7 +517,9 @@ export default function PreDepartureChecklist({navigation}) {
                 </Text>
               </TouchableOpacity>
             </View>
-            <Text style={styleSheet.label}>Slots Confirmed </Text>
+            <Text style={styleSheet.label}>
+              Weather Information Updated (Local Time)
+            </Text>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <TouchableOpacity
                 style={styleSheet.picker}
@@ -549,101 +540,53 @@ export default function PreDepartureChecklist({navigation}) {
                 </Text>
               </TouchableOpacity>
             </View>
+            <Text style={styleSheet.label}>
+              ATC Flight Plan Filed (Local Time)
+            </Text>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <TouchableOpacity
+                style={styleSheet.picker}
+                onPress={() => showDatePickerDeparture('time', 13)}>
+                <Text style={{fontSize: 20, color: 'black'}}>
+                  {pdeparturecheck[13] ? pdeparturecheck[13] : 'dd/mm/yy,--:--'}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => setNowDeparture(13)}
+                style={{padding: 10}}>
+                <Text
+                  style={{
+                    fontSize: Dimensions.get('window').width / 25,
+                    color: 'green',
+                  }}>
+                  Time Now
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <Text style={styleSheet.label}>Slots Confirmed (Local Time)</Text>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <TouchableOpacity
+                style={styleSheet.picker}
+                onPress={() => showDatePickerDeparture('time', 14)}>
+                <Text style={{fontSize: 20, color: 'black'}}>
+                  {pdeparturecheck[14] ? pdeparturecheck[14] : 'dd/mm/yy,--:--'}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => setNowDeparture(14)}
+                style={{padding: 10}}>
+                <Text
+                  style={{
+                    fontSize: Dimensions.get('window').width / 25,
+                    color: 'green',
+                  }}>
+                  Time Now
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
           {/*   ------------------------------Flight Documents/Admin End ----------- */}
 
-          <View style={styleSheet.toggleContainer}>
-            <TouchableOpacity
-              onPress={event => setCheckedDeparture(13)}
-              style={[
-                styleSheet.toggleButton,
-                {
-                  backgroundColor: pdeparturecheck[13].checked
-                    ? 'green'
-                    : 'white',
-                },
-              ]}>
-              <Text
-                style={[
-                  styleSheet.label,
-                  {
-                    textAlign: 'center',
-                    color: pdeparturecheck[13].checked ? 'white' : 'black',
-                  },
-                ]}>
-                FBO Reminder
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => getFeedback(13)}>
-              <Icons
-                style={{marginLeft: 10}}
-                name="comment-processing-outline"
-                color="green"
-                size={30}
-              />
-            </TouchableOpacity>
-          </View>
-          {pdeparturecheck[13].remarks && (
-            <View style={{flexDirection: 'row', marginBottom: 20}}>
-              <View style={styleSheet.remarks}>
-                <Text>{pdeparturecheck[13].remarks}</Text>
-              </View>
-              <TouchableOpacity onPress={() => removeFeedback(13)}>
-                <Icons
-                  style={{marginLeft: 10}}
-                  name="delete-circle-outline"
-                  color="red"
-                  size={30}
-                />
-              </TouchableOpacity>
-            </View>
-          )}
-          <View style={styleSheet.toggleContainer}>
-            <TouchableOpacity
-              onPress={event => setCheckedDeparture(14)}
-              style={[
-                styleSheet.toggleButton,
-                {
-                  backgroundColor: pdeparturecheck[14].checked
-                    ? 'green'
-                    : 'white',
-                },
-              ]}>
-              <Text
-                style={[
-                  styleSheet.label,
-                  {
-                    textAlign: 'center',
-                    color: pdeparturecheck[14].checked ? 'white' : 'black',
-                  },
-                ]}>
-                Handling Agent Reminder
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => getFeedback(14)}>
-              <Icons
-                style={{marginLeft: 10}}
-                name="comment-processing-outline"
-                color="green"
-                size={30}
-              />
-            </TouchableOpacity>
-          </View>
-          {pdeparturecheck[14].remarks && (
-            <View style={{flexDirection: 'row', marginBottom: 20}}>
-              <View style={styleSheet.remarks}>
-                <Text>{pdeparturecheck[14].remarks}</Text>
-              </View>
-              <TouchableOpacity onPress={() => removeFeedback(14)}>
-                <Icons
-                  style={{marginLeft: 10}}
-                  name="delete-circle-outline"
-                  color="red"
-                  size={30}
-                />
-              </TouchableOpacity>
-            </View>
-          )}
           <View style={styleSheet.toggleContainer}>
             <TouchableOpacity
               onPress={event => setCheckedDeparture(15)}
@@ -663,7 +606,7 @@ export default function PreDepartureChecklist({navigation}) {
                     color: pdeparturecheck[15].checked ? 'white' : 'black',
                   },
                 ]}>
-                CIQ Reminder
+                FBO Reminder
               </Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => getFeedback(15)}>
@@ -709,7 +652,7 @@ export default function PreDepartureChecklist({navigation}) {
                     color: pdeparturecheck[16].checked ? 'white' : 'black',
                   },
                 ]}>
-                Airport Security Reminder
+                Handling Agent Reminder
               </Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => getFeedback(16)}>
@@ -755,7 +698,7 @@ export default function PreDepartureChecklist({navigation}) {
                     color: pdeparturecheck[17].checked ? 'white' : 'black',
                   },
                 ]}>
-                Catering Agent Reminder
+                CIQ Reminder
               </Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => getFeedback(17)}>
@@ -801,7 +744,7 @@ export default function PreDepartureChecklist({navigation}) {
                     color: pdeparturecheck[18].checked ? 'white' : 'black',
                   },
                 ]}>
-                Aircraft Fueller Reminder
+                Airport Security Reminder
               </Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => getFeedback(18)}>
@@ -828,6 +771,98 @@ export default function PreDepartureChecklist({navigation}) {
               </TouchableOpacity>
             </View>
           )}
+          <View style={styleSheet.toggleContainer}>
+            <TouchableOpacity
+              onPress={event => setCheckedDeparture(19)}
+              style={[
+                styleSheet.toggleButton,
+                {
+                  backgroundColor: pdeparturecheck[19].checked
+                    ? 'green'
+                    : 'white',
+                },
+              ]}>
+              <Text
+                style={[
+                  styleSheet.label,
+                  {
+                    textAlign: 'center',
+                    color: pdeparturecheck[19].checked ? 'white' : 'black',
+                  },
+                ]}>
+                Catering Agent Reminder
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => getFeedback(19)}>
+              <Icons
+                style={{marginLeft: 10}}
+                name="comment-processing-outline"
+                color="green"
+                size={30}
+              />
+            </TouchableOpacity>
+          </View>
+          {pdeparturecheck[19].remarks && (
+            <View style={{flexDirection: 'row', marginBottom: 20}}>
+              <View style={styleSheet.remarks}>
+                <Text>{pdeparturecheck[19].remarks}</Text>
+              </View>
+              <TouchableOpacity onPress={() => removeFeedback(19)}>
+                <Icons
+                  style={{marginLeft: 10}}
+                  name="delete-circle-outline"
+                  color="red"
+                  size={30}
+                />
+              </TouchableOpacity>
+            </View>
+          )}
+          <View style={styleSheet.toggleContainer}>
+            <TouchableOpacity
+              onPress={event => setCheckedDeparture(20)}
+              style={[
+                styleSheet.toggleButton,
+                {
+                  backgroundColor: pdeparturecheck[20].checked
+                    ? 'green'
+                    : 'white',
+                },
+              ]}>
+              <Text
+                style={[
+                  styleSheet.label,
+                  {
+                    textAlign: 'center',
+                    color: pdeparturecheck[20].checked ? 'white' : 'black',
+                  },
+                ]}>
+                Aircraft Fueller Reminder
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => getFeedback(20)}>
+              <Icons
+                style={{marginLeft: 10}}
+                name="comment-processing-outline"
+                color="green"
+                size={30}
+              />
+            </TouchableOpacity>
+          </View>
+          {pdeparturecheck[20].remarks && (
+            <View style={{flexDirection: 'row', marginBottom: 20}}>
+              <View style={styleSheet.remarks}>
+                <Text>{pdeparturecheck[20].remarks}</Text>
+              </View>
+              <TouchableOpacity onPress={() => removeFeedback(20)}>
+                <Icons
+                  style={{marginLeft: 10}}
+                  name="delete-circle-outline"
+                  color="red"
+                  size={30}
+                />
+              </TouchableOpacity>
+            </View>
+          )}
           {/*   ------------------------------Transport Operator Reminder	 ----------- */}
           <Text style={[styleSheet.label, {marginTop: 10}]}>
             Transport Operator Reminder:
@@ -844,10 +879,10 @@ export default function PreDepartureChecklist({navigation}) {
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <TextInput
                 style={styleSheet.input}
-                value={pdeparturecheck[19]}
+                value={pdeparturecheck[21]}
                 onChangeText={text => {
                   var tpdeparturecheck = [...pdeparturecheck];
-                  tpdeparturecheck[19] = text;
+                  tpdeparturecheck[21] = text;
                   setpdeparturecheck(tpdeparturecheck);
                 }}
               />
@@ -856,15 +891,15 @@ export default function PreDepartureChecklist({navigation}) {
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <TextInput
                 style={styleSheet.input}
-                value={pdeparturecheck[20]}
+                value={pdeparturecheck[22]}
                 onChangeText={text => {
                   var tpdeparturecheck = [...pdeparturecheck];
-                  tpdeparturecheck[20] = text;
+                  tpdeparturecheck[22] = text;
                   setpdeparturecheck(tpdeparturecheck);
                 }}
               />
             </View>
-            {/* <Text style={styleSheet.label}>Fuelling Time</Text>
+            {/* <Text style={styleSheet.label}>Fuelling Time (Local Time)</Text>
           <View style={{flexDirection: 'row', alignItems: 'center'}}>
             <TouchableOpacity
               style={styleSheet.picker}
@@ -887,10 +922,10 @@ export default function PreDepartureChecklist({navigation}) {
                 style={styleSheet.input}
                 multiline={true}
                 numberOfLines={2}
-                value={pdeparturecheck[22]}
+                value={pdeparturecheck[23]}
                 onChangeText={text => {
                   var tpdeparturecheck = [...pdeparturecheck];
-                  tpdeparturecheck[22] = text;
+                  tpdeparturecheck[23] = text;
                   setpdeparturecheck(tpdeparturecheck);
                 }}
               />
@@ -903,10 +938,10 @@ export default function PreDepartureChecklist({navigation}) {
               style={styleSheet.input}
               multiline={true}
               numberOfLines={2}
-              value={pdeparturecheck[23]}
+              value={pdeparturecheck[24]}
               onChangeText={text => {
                 var tpdeparturecheck = [...pdeparturecheck];
-                tpdeparturecheck[23] = text;
+                tpdeparturecheck[24] = text;
                 setpdeparturecheck(tpdeparturecheck);
               }}
             />

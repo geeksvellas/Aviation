@@ -62,7 +62,7 @@ export function SideDrawer(props) {
           // icon={({color, size}) => (
           //   <Icon name="home" color={color} size={size} />
           // )}
-          label="Arrival Service"
+          label="Arrival Services"
           labelStyle={[
             styles.drawerLabel,
             current == 2 ? {color: 'green'} : {color: 'black'},
