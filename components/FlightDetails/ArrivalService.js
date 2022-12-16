@@ -73,7 +73,7 @@ export default function ArrivalService({navigation}) {
     null,
     null,
     {value: null, file: []},
-    'For remarks; if the fuel truck needs to come around a second time, they can put the details of the second time it comes around into the remarks here',
+    'For remarks; if the fuel truck needs to  come around a second time, they can put the details of the second time it comes around into the remarks here',
     {checked: true},
     null,
     null,
