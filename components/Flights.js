@@ -38,7 +38,7 @@ export default function Flights({navigation}) {
 
   const renderItem = data => (
     <TouchableOpacity
-      onPress={() => navigation.navigate('FlightDetailsRoute')}
+      onPress={() => navigation.navigate('FlightDetailsRoute',{flightName:"N123AB",dataOne:4,dataTwo:2})}
       style={styles.rowFront}
       underlayColor={'#AAA'}
       activeOpacity={2}>
