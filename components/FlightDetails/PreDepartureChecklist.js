@@ -12,6 +12,7 @@ import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import DocumentPicker from 'react-native-document-picker';
+import * as ImagePicker from 'react-native-image-picker';
 import RNFetchBlob from 'rn-fetch-blob';
 import Feedback from '../Feedback';
 import Loader from '../Loader';
@@ -19,6 +20,10 @@ const {height} = Dimensions.get('window');
 
 export default function PreDepartureChecklist({navigation}) {
   const refRBSheet = useRef();
+
+  const [uploadSection, setuploadSection] = useState(0);
+  const [uploadaddedSection, setuploadAddedSection] = useState(false);
+  const [uploadaddedSectionindex, setuploadAddedSectionindex] = useState(false);
 
   const [pdaddmovement, setpdaddmovement] = useState(false);
   const [pdaddmovementnum, setpdaddmovementnum] = useState(0);
@@ -55,6 +60,29 @@ export default function PreDepartureChecklist({navigation}) {
     {checked: false, remarks: null},
     null,
     null,
+    null,
+    null,
+    {value: null, file: []},
+    {value: null, file: []},
+    [
+      {
+        name: null,
+        location: null,
+        hotelMap: {value: null, file: []},
+        time: null,
+        remarks: null,
+      },
+    ], //27
+    null,
+    [
+      {
+        name: null,
+        location: null,
+        hotelMap: {value: null, file: []},
+        time: null,
+        remarks: null,
+      },
+    ],
     null,
     null,
   ]);
@@ -162,7 +190,77 @@ export default function PreDepartureChecklist({navigation}) {
     setpdeparturecheck(tpdeparturecheck);
   };
 
-  const addMovement = type => {
+  const onPressDocPreA_New = async (index, res) => {
+    //console.log("HEREEE",index,uploadaddedSectionindex);
+    setloading(false);
+    RNFetchBlob.fs
+      .readFile(res.uri, 'base64')
+      .then(encoded => {
+        // console.log(encoded, 'reports.base64');
+        setloading(false);
+
+        if (uploadaddedSection) {
+          var tpdeparturecheck = [...pdeparturecheck];
+          tpdeparturecheck[index][uploadaddedSectionindex].hotelMap.file.push({
+            name: res.fileName.replace('rn_image_picker_lib_temp_', ''),
+            base64: 'data:' + res.type + ';base64,' + encoded,
+          });
+          console.log(tpdeparturecheck[index][uploadaddedSectionindex]);
+          setpdeparturecheck(tpdeparturecheck);
+        } else {
+          var tpdeparturecheck = [...pdeparturecheck];
+          tpdeparturecheck[index].file.push({
+            name: res.fileName.replace('rn_image_picker_lib_temp_', ''),
+            base64: 'data:' + res.type + ';base64,' + encoded,
+          });
+          setpdeparturecheck(tpdeparturecheck);
+        }
+      })
+      .catch(error => {
+        setloading(false);
+        console.log(error);
+      });
+
+    refRBSheet.current.close();
+  };
+
+  const getImage = async type => {
+    console.log('HERE', uploadSection);
+    var options = {
+      mediaType: 'image',
+      includeBase64: false,
+      maxHeight: 800,
+      maxWidth: 800,
+    };
+    console.log(options);
+    switch (type) {
+      case true:
+        try {
+          options.mediaType = 'photo';
+          const result = await ImagePicker.launchImageLibrary(options);
+          const file = result.assets[0];
+
+          onPressDocPreA_New(uploadSection, file);
+        } catch (error) {
+          console.log(error);
+        }
+        break;
+      case false:
+        try {
+          const result = await ImagePicker.launchCamera(options);
+          const file = result.assets[0];
+          onPressDocPreA_New(uploadSection, file);
+        } catch (error) {
+          console.log(error);
+        }
+        break;
+      default:
+        break;
+    }
+  };
+
+  const addMovement = (type, index) => {
+    // setpdeparturecheck(x);
     switch (type) {
       case true:
         setpdaddmovement(true);
@@ -172,6 +270,16 @@ export default function PreDepartureChecklist({navigation}) {
         setpaxpdaddmovement(true);
         setpaxpdaddmovementnum(paxpdaddmovementnum + 1);
     }
+
+    //console.log(index);
+    pdeparturecheck[index].push({
+      name: null,
+      location: null,
+      hotelMap: {value: null, file: []},
+      time: null,
+      remarks: null,
+    });
+    setpdeparturecheck(pdeparturecheck);
   };
 
   const onRemoveMovement = type => {
@@ -208,14 +316,13 @@ export default function PreDepartureChecklist({navigation}) {
           justifyContent: 'space-between',
           marginVertical: 20,
         }}>
-        <TouchableOpacity
-          style={{marginLeft: 10}}
-          onPress={() => {
-            navigation.openDrawer();
+        <Text
+          style={{
+            fontSize: 24,
+            fontWeight: 'bold',
+            color: 'black',
+            paddingLeft: 20,
           }}>
-          <Icons name="menu" color="green" size={30} />
-        </TouchableOpacity>
-        <Text style={{fontSize: 24, fontWeight: 'bold', color: 'black'}}>
           Pre-Departure Checklist
         </Text>
         <TouchableOpacity style={{marginRight: 20}}>
@@ -254,6 +361,17 @@ export default function PreDepartureChecklist({navigation}) {
                     : 'dd/mm/yy, -- : --'}
                 </Text>
               </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => setNowDeparture(3)}
+                style={{padding: 10}}>
+                <Text
+                  style={{
+                    fontSize: Dimensions.get('window').width / 25,
+                    color: 'green',
+                  }}>
+                  Time Now
+                </Text>
+              </TouchableOpacity>
             </View>
             <Text style={styleSheet.label}>Pickup Location</Text>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -278,7 +396,11 @@ export default function PreDepartureChecklist({navigation}) {
               <Text style={styleSheet.label}>Photo of Pickup Location</Text>
               <TouchableOpacity
                 //onPress={event => onPressDocPreA(2)}
-                onPress={() => refRBSheet.current.open()}
+                onPress={() => {
+                  setuploadAddedSection(false);
+                  setuploadSection(2);
+                  refRBSheet.current.open();
+                }}
                 style={{
                   marginLeft: 10,
                   paddingVertical: 5,
@@ -316,7 +438,7 @@ export default function PreDepartureChecklist({navigation}) {
                           },
                         }),
                       }}>
-                      <Text style={{color: 'black'}}>{value.name}</Text>
+                      <Text style={styleSheet.imgName}>{value.name}</Text>
                       <TouchableOpacity
                         onPress={() => removeFilePreA(2, index)}>
                         <Icons
@@ -411,7 +533,7 @@ export default function PreDepartureChecklist({navigation}) {
                 alignItems: 'center',
               }}>
               <TouchableOpacity
-                onPress={() => addMovement(true)}
+                onPress={() => addMovement(true, 27)}
                 style={[styleSheet.button]}>
                 <Text style={{color: 'white', textAlign: 'center'}}>
                   Add Transport
@@ -494,7 +616,14 @@ export default function PreDepartureChecklist({navigation}) {
                       </Text>
                       <TouchableOpacity
                         //onPress={event => onPressDocPreA(2)}
-                        onPress={() => refRBSheet.current.open()}
+                        onPress={async () => {
+                          //added section
+                          //mark
+                          setuploadAddedSection(true);
+                          setuploadAddedSectionindex(index);
+                          setuploadSection(27);
+                          refRBSheet.current.open();
+                        }}
                         style={{
                           marginLeft: 10,
                           paddingVertical: 5,
@@ -505,6 +634,51 @@ export default function PreDepartureChecklist({navigation}) {
                         <Text style={{color: 'green'}}>Take Camera</Text>
                       </TouchableOpacity>
                     </View>
+                    {pdeparturecheck[27][index].hotelMap.file.length > 0 && (
+                      <View style={{marginBottom: 20}}>
+                        {pdeparturecheck[27][index].hotelMap.file.map(
+                          (value, index) => {
+                            return (
+                              <View
+                                key={index}
+                                style={{
+                                  backgroundColor: 'white',
+                                  borderRadius: 16,
+                                  padding: 10,
+                                  flexDirection: 'row',
+                                  justifyContent: 'space-between',
+                                  alignItems: 'center',
+                                  marginBottom: 20,
+                                  marginHorizontal: 5,
+                                  ...Platform.select({
+                                    ios: {
+                                      shadowColor: '#000',
+                                      shadowOffset: {width: 0, height: 2},
+                                      shadowOpacity: 0.8,
+                                      shadowRadius: 2,
+                                    },
+                                    android: {
+                                      elevation: 3,
+                                    },
+                                  }),
+                                }}>
+                                <Text style={styleSheet.imgName}>
+                                  {value.name}
+                                </Text>
+                                <TouchableOpacity
+                                  onPress={() => removeFilePreA(2, index)}>
+                                  <Icons
+                                    style={{color: 'green', marginLeft: 10}}
+                                    name="close"
+                                    size={30}
+                                  />
+                                </TouchableOpacity>
+                              </View>
+                            );
+                          },
+                        )}
+                      </View>
+                    )}
 
                     <Text style={styleSheet.label}>Driver Name</Text>
                     <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -568,11 +742,22 @@ export default function PreDepartureChecklist({navigation}) {
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <TouchableOpacity
                 style={styleSheet.picker}
-                onPress={() => showDatePickerDeparture('datetime', 3)}>
+                onPress={() => showDatePickerDeparture('datetime', 28)}>
                 <Text style={{fontSize: 20, color: 'black'}}>
-                  {pdeparturecheck[3]
-                    ? pdeparturecheck[3]
+                  {pdeparturecheck[28]
+                    ? pdeparturecheck[28]
                     : 'dd/mm/yy, -- : --'}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => setNowDeparture(28)}
+                style={{padding: 10}}>
+                <Text
+                  style={{
+                    fontSize: Dimensions.get('window').width / 25,
+                    color: 'green',
+                  }}>
+                  Time Now
                 </Text>
               </TouchableOpacity>
             </View>
@@ -600,7 +785,11 @@ export default function PreDepartureChecklist({navigation}) {
               <Text style={styleSheet.label}>Photo of Pickup Location</Text>
               <TouchableOpacity
                 //onPress={event => onPressDocPreA(2)}
-                onPress={() => refRBSheet.current.open()}
+                onPress={() => {
+                  setuploadAddedSection(false);
+                  setuploadSection(26);
+                  refRBSheet.current.open();
+                }}
                 style={{
                   marginLeft: 10,
                   paddingVertical: 5,
@@ -611,6 +800,47 @@ export default function PreDepartureChecklist({navigation}) {
                 <Text style={{color: 'green'}}>Take Camera</Text>
               </TouchableOpacity>
             </View>
+            {pdeparturecheck[26].file.length > 0 && (
+              <View style={{marginBottom: 20}}>
+                {pdeparturecheck[26].file.map((value, index) => {
+                  return (
+                    <View
+                      key={index}
+                      style={{
+                        backgroundColor: 'white',
+                        borderRadius: 16,
+                        padding: 10,
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        marginBottom: 20,
+                        marginHorizontal: 5,
+                        ...Platform.select({
+                          ios: {
+                            shadowColor: '#000',
+                            shadowOffset: {width: 0, height: 2},
+                            shadowOpacity: 0.8,
+                            shadowRadius: 2,
+                          },
+                          android: {
+                            elevation: 3,
+                          },
+                        }),
+                      }}>
+                      <Text style={styleSheet.imgName}>{value.name}</Text>
+                      <TouchableOpacity
+                        onPress={() => removeFilePreA(2, index)}>
+                        <Icons
+                          style={{color: 'green', marginLeft: 10}}
+                          name="close"
+                          size={30}
+                        />
+                      </TouchableOpacity>
+                    </View>
+                  );
+                })}
+              </View>
+            )}
 
             <Text style={styleSheet.label}>Driver Name</Text>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -660,7 +890,7 @@ export default function PreDepartureChecklist({navigation}) {
                 alignItems: 'center',
               }}>
               <TouchableOpacity
-                onPress={() => addMovement(false)}
+                onPress={() => addMovement(false, 29)}
                 style={[styleSheet.button]}>
                 <Text style={{color: 'white', textAlign: 'center'}}>
                   Add Transport
@@ -743,7 +973,12 @@ export default function PreDepartureChecklist({navigation}) {
                       </Text>
                       <TouchableOpacity
                         //onPress={event => onPressDocPreA(2)}
-                        onPress={() => refRBSheet.current.open()}
+                        onPress={() => {
+                          setuploadAddedSection(true);
+                          setuploadAddedSectionindex(index);
+                          setuploadSection(29);
+                          refRBSheet.current.open();
+                        }}
                         style={{
                           marginLeft: 10,
                           paddingVertical: 5,
@@ -754,6 +989,51 @@ export default function PreDepartureChecklist({navigation}) {
                         <Text style={{color: 'green'}}>Take Camera</Text>
                       </TouchableOpacity>
                     </View>
+                    {pdeparturecheck[29][index].hotelMap.file.length > 0 && (
+                      <View style={{marginBottom: 20}}>
+                        {pdeparturecheck[29][index].hotelMap.file.map(
+                          (value, index) => {
+                            return (
+                              <View
+                                key={index}
+                                style={{
+                                  backgroundColor: 'white',
+                                  borderRadius: 16,
+                                  padding: 10,
+                                  flexDirection: 'row',
+                                  justifyContent: 'space-between',
+                                  alignItems: 'center',
+                                  marginBottom: 20,
+                                  marginHorizontal: 5,
+                                  ...Platform.select({
+                                    ios: {
+                                      shadowColor: '#000',
+                                      shadowOffset: {width: 0, height: 2},
+                                      shadowOpacity: 0.8,
+                                      shadowRadius: 2,
+                                    },
+                                    android: {
+                                      elevation: 3,
+                                    },
+                                  }),
+                                }}>
+                                <Text style={styleSheet.imgName}>
+                                  {value.name}
+                                </Text>
+                                <TouchableOpacity
+                                  onPress={() => removeFilePreA(2, index)}>
+                                  <Icons
+                                    style={{color: 'green', marginLeft: 10}}
+                                    name="close"
+                                    size={30}
+                                  />
+                                </TouchableOpacity>
+                              </View>
+                            );
+                          },
+                        )}
+                      </View>
+                    )}
 
                     <Text style={styleSheet.label}>Driver Name</Text>
                     <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -901,7 +1181,11 @@ export default function PreDepartureChecklist({navigation}) {
             }}>
             <Text style={styleSheet.label}>Upload Departure GenDec</Text>
             <TouchableOpacity
-              onPress={event => onPressDocPreA(8)}
+              //onPress={event => onPressDocPreA(8)}
+              onPress={event => {
+                setuploadSection(8);
+                refRBSheet.current.open();
+              }}
               style={{
                 marginLeft: 10,
                 paddingVertical: 5,
@@ -939,7 +1223,7 @@ export default function PreDepartureChecklist({navigation}) {
                         },
                       }),
                     }}>
-                    <Text style={{color: 'black'}}>{value.name}</Text>
+                    <Text style={styleSheet.imgName}>{value.name}</Text>
                     <TouchableOpacity onPress={() => removeFilePreA(8, index)}>
                       <Icons
                         style={{color: 'green', marginLeft: 10}}
@@ -1392,10 +1676,11 @@ export default function PreDepartureChecklist({navigation}) {
             }}>
             <View style={{flex: 1, paddingLeft: 20}}>
               <View style={{flex: 1}}>
-                <Text style={{color: 'black', fontSize: 22}}>Upload Image</Text>
+                <Text style={{color: 'black', fontSize: 22}}>Upload</Text>
               </View>
               <View style={{flex: 1.5, flexDirection: 'column'}}>
                 <TouchableOpacity
+                  onPress={() => getImage(false)}
                   style={{
                     flex: 1,
                     flexDirection: 'row',
@@ -1403,11 +1688,12 @@ export default function PreDepartureChecklist({navigation}) {
                   }}>
                   <Icons name="camera-outline" size={25} color={'black'} />
                   <Text style={{color: 'black', fontSize: 18, paddingLeft: 20}}>
-                    Camera
+                    Upload from Camera
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  onPress={() => onPressDocPreA(6)}
+                  //onPress={() => onPressDocPreA(6)}
+                  onPress={() => getImage(true)}
                   style={{
                     flex: 1,
                     flexDirection: 'row',
@@ -1415,7 +1701,7 @@ export default function PreDepartureChecklist({navigation}) {
                   }}>
                   <Icons name="image-outline" size={25} color={'black'} />
                   <Text style={{color: 'black', fontSize: 18, paddingLeft: 20}}>
-                    Gallery
+                    Upload from Gallery
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -1439,6 +1725,7 @@ const styleSheet = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f2f2f2',
   },
+  imgName: {color: 'black', fontSize: 12, fontWeight: '600'},
   checkbox: {
     width: 40,
     height: 40,

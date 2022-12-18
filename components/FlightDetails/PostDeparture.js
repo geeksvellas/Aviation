@@ -16,11 +16,19 @@ import React, {useRef, useState, useEffect} from 'react';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import DocumentPicker from 'react-native-document-picker';
 import RNFetchBlob from 'rn-fetch-blob';
+import RBSheet from 'react-native-raw-bottom-sheet';
+import * as ImagePicker from 'react-native-image-picker';
 import Loader from '../Loader';
 
+const {height} = Dimensions.get('window');
+
 export default function PostDeparture({navigation}) {
+  const refRBSheet = useRef();
   const [mode, setMode] = useState('time');
   const [loading, setloading] = useState(false);
+  
+  const [uploadSection,setuploadSection]=useState(0);
+
   const [postdeparture, setpostdeparture] = useState([
     {value: null, file: []},
     null,
@@ -107,6 +115,58 @@ export default function PostDeparture({navigation}) {
     tpostdeparture[arrayIndex].file.splice(index, 1);
     setpostdeparture(tpostdeparture);
   };
+
+  const onPressDocPreA_New = async (index,res) => {
+    setloading(false);
+    RNFetchBlob.fs
+  .readFile(res.uri, 'base64')
+  .then(encoded => {
+    // console.log(encoded, 'reports.base64');
+    setloading(false);
+    var tpostdeparture = [...postdeparture];
+      tpostdeparture[index].file.push({
+      name: res.fileName.replace('rn_image_picker_lib_temp_',''),
+      base64: 'data:' + res.type + ';base64,' + encoded,
+    });
+    setpostdeparture(tpostdeparture);
+    
+  })
+  .catch(error => {
+    setloading(false);
+    console.log(error);
+  });
+  refRBSheet.current.close();
+}
+
+  const getImage=async (type)=>{
+    console.log("HERE")
+    var options={mediaType:'image',includeBase64: false,maxHeight: 800,maxWidth: 800};
+    console.log(options);
+    switch(type){
+      case true:
+        try {
+          options.mediaType='photo';
+          const result = await ImagePicker.launchImageLibrary(options);  
+          const file=result.assets[0];
+          onPressDocPreA_New(uploadSection,file)
+        } catch (error) {
+          console.log(error);
+        }
+        break;
+        case false:
+          try {
+            const result = await ImagePicker.launchCamera(options);  
+            const file=result.assets[0];
+            onPressDocPreA_New(uploadSection,file)
+          } catch (error) {
+            console.log(error);
+          }
+          break;
+          default:
+            break;
+    }
+    
+}
   return (
     <ScrollView>
       <Loader visible={loading} />
@@ -117,14 +177,7 @@ export default function PostDeparture({navigation}) {
           justifyContent: 'space-between',
           marginVertical: 20,
         }}>
-        <TouchableOpacity
-          style={{marginLeft: 10}}
-          onPress={() => {
-            navigation.openDrawer();
-          }}>
-          <Icons name="menu" color="green" size={30} />
-        </TouchableOpacity>
-        <Text style={{fontSize: 24, fontWeight: 'bold', color: 'black'}}>
+        <Text style={{fontSize: 24, fontWeight: 'bold', color: 'black',paddingLeft:20}}>
           Post-Departure
         </Text>
         <TouchableOpacity style={{marginRight: 20}}>
@@ -141,7 +194,11 @@ export default function PostDeparture({navigation}) {
           }}>
           <Text style={styleSheet.label}>Stamped GenDec</Text>
           <TouchableOpacity
-            onPress={event => onPressDocPreA(0)}
+            //onPress={event => onPressDocPreA(0)}
+            onPress={() => {
+              setuploadSection(0)
+              refRBSheet.current.open()
+            }}
             style={{
               marginLeft: 10,
               paddingVertical: 5,
@@ -179,7 +236,7 @@ export default function PostDeparture({navigation}) {
                       },
                     }),
                   }}>
-                  <Text style={{color: 'black'}}>{value.name}</Text>
+                  <Text style={styleSheet.imgName}>{value.name}</Text>
                   <TouchableOpacity onPress={() => removeFilePreA(0, index)}>
                     <Icons
                       style={{color: 'green', marginLeft: 10}}
@@ -261,6 +318,52 @@ export default function PostDeparture({navigation}) {
         onCancel={hideDatePickerPostDepart}
         is24Hour={true}
       />
+      <RBSheet
+          ref={refRBSheet}
+          closeOnDragDown={true}
+          closeOnPressMask={true}
+          height={height / 4}
+          customStyles={{
+            wrapper: {
+              backgroundColor: '#00000056',
+            },
+            draggableIcon: {
+              backgroundColor: '#000',
+            },
+          }}>
+          <View style={{flex: 1, paddingLeft: 20}}>
+            <View style={{flex: 1}}>
+              <Text style={{color: 'black', fontSize: 22}}>Upload Image</Text>
+            </View>
+            <View style={{flex: 1.5, flexDirection: 'column'}}>
+              <TouchableOpacity
+                onPress={()=>getImage(false)}
+                style={{
+                  flex: 1,
+                  flexDirection: 'row',
+                  justifyContent: 'flex-start',
+                }}>
+                <Icons name="camera-outline" size={25} color={'black'} />
+                <Text style={{color: 'black', fontSize: 18, paddingLeft: 20}}>
+                  Upload from Camera
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                //onPress={() => onPressDocPreA(6)}
+                onPress={()=>getImage(true)}
+                style={{
+                  flex: 1,
+                  flexDirection: 'row',
+                  justifyContent: 'flex-start',
+                }}>
+                <Icons name="image-outline" size={25} color={'black'} />
+                <Text style={{color: 'black', fontSize: 18, paddingLeft: 20}}>
+                  Upload from Gallery
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </RBSheet>
     </ScrollView>
   );
 }
@@ -270,6 +373,7 @@ const styleSheet = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f2f2f2',
   },
+  imgName:{color: 'black',fontSize:12,fontWeight:'600'},
   checkbox: {
     width: 40,
     height: 40,

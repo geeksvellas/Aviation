@@ -17,6 +17,7 @@ import DocumentPicker from 'react-native-document-picker';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import RNFetchBlob from 'rn-fetch-blob';
 import RBSheet from 'react-native-raw-bottom-sheet';
+import * as ImagePicker from 'react-native-image-picker';
 import Loader from '../Loader';
 
 const {width, height} = Dimensions.get('window');
@@ -24,6 +25,9 @@ const {width, height} = Dimensions.get('window');
 export default function ArrivalService({navigation}) {
   const currentPicker = useRef(0);
   const refRBSheet = useRef();
+
+  //upload funcs
+  const [uploadSection, setuploadSection] = useState(0);
 
   const [mode, setMode] = useState('time');
   const [loading, setloading] = useState(false);
@@ -98,6 +102,7 @@ export default function ArrivalService({navigation}) {
     null,
     null,
     [],
+    null,
   ]);
   const addMovement = () => {
     var tarrival = [...arrival];
@@ -218,6 +223,65 @@ export default function ArrivalService({navigation}) {
       }
     }
   };
+
+  const onPressDocPreA_New = async (index, res) => {
+    setloading(false);
+    RNFetchBlob.fs
+      .readFile(res.uri, 'base64')
+      .then(encoded => {
+        // console.log(encoded, 'reports.base64');
+        setloading(false);
+        var tarrival = [...arrival];
+        tarrival[index].file.push({
+          name: res.fileName.replace('rn_image_picker_lib_temp_', ''),
+          base64: 'data:' + res.type + ';base64,' + encoded,
+        });
+        setArrival(tarrival);
+      })
+      .catch(error => {
+        setloading(false);
+        console.log(error);
+      });
+    refRBSheet.current.close();
+  };
+
+  const getImage = async type => {
+    console.log('HERE', uploadSection);
+    var options = {
+      mediaType: 'image',
+      includeBase64: false,
+      maxHeight: 800,
+      maxWidth: 800,
+    };
+    console.log(options);
+    switch (type) {
+      case true:
+        try {
+          options.mediaType = 'photo';
+          const result = await ImagePicker.launchImageLibrary(options);
+          console.log(result);
+          const file = result.assets[0];
+          onPressDocPreA_New(uploadSection, file);
+        } catch (error) {
+          console.log(error);
+        }
+        break;
+      case false:
+        try {
+          const result = await ImagePicker.launchCamera(options);
+          console.log(result);
+
+          const file = result.assets[0];
+          onPressDocPreA_New(uploadSection, file);
+        } catch (error) {
+          console.log(error);
+        }
+        break;
+      default:
+        break;
+    }
+  };
+
   const removeFilePreA = (arrayIndex, index) => {
     var tarrival = [...arrival];
     tarrival[arrayIndex].file.splice(index, 1);
@@ -251,18 +315,12 @@ export default function ArrivalService({navigation}) {
           justifyContent: 'space-between',
           marginVertical: 20,
         }}>
-        <TouchableOpacity
-          style={{marginLeft: 10}}
-          onPress={() => {
-            navigation.openDrawer();
-          }}>
-          <Icons name="menu" color="green" size={30} />
-        </TouchableOpacity>
         <Text
           style={{
             fontSize: Dimensions.get('window').width / 15,
             fontWeight: 'bold',
             color: 'black',
+            paddingLeft: 20,
           }}>
           Arrival Services
         </Text>
@@ -402,7 +460,10 @@ export default function ArrivalService({navigation}) {
               />
               <TouchableOpacity
                 //onPress={event => onPressDocPreA(6)}
-                onPress={() => refRBSheet.current.open()}
+                onPress={() => {
+                  setuploadSection(6);
+                  refRBSheet.current.open();
+                }}
                 style={{
                   marginLeft: 10,
                   paddingVertical: 10,
@@ -445,7 +506,7 @@ export default function ArrivalService({navigation}) {
                           },
                         }),
                       }}>
-                      <Text style={{color: 'black'}}>{value.name}</Text>
+                      <Text style={styleSheet.imgName}>{value.name}</Text>
                       <TouchableOpacity
                         onPress={() => removeFilePreA(6, index)}>
                         <Icons
@@ -867,7 +928,10 @@ export default function ArrivalService({navigation}) {
               </Text>
               <TouchableOpacity
                 //onPress={event => onPressDocPreA(16)}
-                onPress={() => refRBSheet.current.open()}
+                onPress={() => {
+                  setuploadSection(16);
+                  refRBSheet.current.open();
+                }}
                 disabled={arrival[20].checked}
                 style={{
                   marginLeft: 10,
@@ -883,7 +947,7 @@ export default function ArrivalService({navigation}) {
               </TouchableOpacity>
             </View>
             {arrival[16].file.length > 0 && (
-              <View style={{marginBottom: 20}}>
+              <View style={{marginBottom: 20, marginTop: 10}}>
                 {arrival[16].file.map((value, index) => {
                   return (
                     <View
@@ -909,7 +973,7 @@ export default function ArrivalService({navigation}) {
                           },
                         }),
                       }}>
-                      <Text style={{color: 'black'}}>{value.name}</Text>
+                      <Text style={styleSheet.imgName}>{value.name}</Text>
                       <TouchableOpacity
                         onPress={() => removeFilePreA(16, index)}>
                         <Icons
@@ -932,7 +996,11 @@ export default function ArrivalService({navigation}) {
               }}>
               <Text style={styleSheet.label}>Next Catering Order</Text>
               <TouchableOpacity
-                onPress={event => onPressDocPreA(17)}
+                //onPress={event => onPressDocPreA(17)}
+                onPress={() => {
+                  setuploadSection(17);
+                  refRBSheet.current.open();
+                }}
                 disabled={arrival[20].checked}
                 style={{
                   marginLeft: 10,
@@ -974,7 +1042,7 @@ export default function ArrivalService({navigation}) {
                           },
                         }),
                       }}>
-                      <Text style={{color: 'black'}}>{value.name}</Text>
+                      <Text style={styleSheet.imgName}>{value.name}</Text>
                       <TouchableOpacity
                         onPress={() => removeFilePreA(17, index)}>
                         <Icons
@@ -1534,7 +1602,11 @@ export default function ArrivalService({navigation}) {
               <Text style={styleSheet.label}>Fuel Receipt (signed)</Text>
               <TouchableOpacity
                 disabled={arrival[37].checked}
-                onPress={event => onPressDocPreA(35)}
+                onPress={event => {
+                  //onPressDocPreA(35)
+                  setuploadSection(35);
+                  refRBSheet.current.open();
+                }}
                 style={{
                   marginLeft: 10,
                   paddingVertical: 5,
@@ -1575,7 +1647,7 @@ export default function ArrivalService({navigation}) {
                           },
                         }),
                       }}>
-                      <Text style={{color: 'black'}}>{value.name}</Text>
+                      <Text style={styleSheet.imgName}>{value.name}</Text>
                       <TouchableOpacity
                         onPress={() => removeFilePreA(35, index)}>
                         <Icons
@@ -1711,7 +1783,11 @@ export default function ArrivalService({navigation}) {
               <Text style={styleSheet.label}>Photo (if required)</Text>
               <TouchableOpacity
                 disabled={arrival[42].checked}
-                onPress={event => onPressDocPreA(40)}
+                //onPress={event => onPressDocPreA(40)}
+                onPress={() => {
+                  setuploadSection(40);
+                  refRBSheet.current.open();
+                }}
                 style={{
                   marginLeft: 10,
                   paddingVertical: 5,
@@ -1752,7 +1828,7 @@ export default function ArrivalService({navigation}) {
                           },
                         }),
                       }}>
-                      <Text style={{color: 'black'}}>{value.name}</Text>
+                      <Text style={styleSheet.imgName}>{value.name}</Text>
                       <TouchableOpacity
                         onPress={() => removeFilePreA(40, index)}>
                         <Icons
@@ -2014,13 +2090,13 @@ export default function ArrivalService({navigation}) {
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <TouchableOpacity
                 style={styleSheet.picker}
-                onPress={() => showDatePicker('time', 49)}>
+                onPress={() => showDatePicker('time', 50)}>
                 <Text style={{fontSize: 20, color: 'black'}}>
-                  {arrival[49] ? arrival[49] : 'dd/mm/yy, -- : --'}
+                  {arrival[50] ? arrival[50] : 'dd/mm/yy, -- : --'}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => setNow(49)}
+                onPress={() => setNow(50)}
                 style={{padding: 10}}>
                 <Text
                   style={{
@@ -2038,13 +2114,13 @@ export default function ArrivalService({navigation}) {
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <TouchableOpacity
                 style={styleSheet.picker}
-                onPress={() => showDatePicker('time', 49)}>
+                onPress={() => showDatePicker('time', 61)}>
                 <Text style={{fontSize: 20, color: 'black'}}>
-                  {arrival[49] ? arrival[49] : 'dd/mm/yy, -- : --'}
+                  {arrival[61] ? arrival[61] : 'dd/mm/yy, -- : --'}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => setNow(49)}
+                onPress={() => setNow(61)}
                 style={{padding: 10}}>
                 <Text
                   style={{
@@ -2243,7 +2319,10 @@ export default function ArrivalService({navigation}) {
             <Text style={styleSheet.label}>Map of Route to Hotel</Text>
             <TouchableOpacity
               //onPress={event => onPressDocPreA(54)}
-              onPress={() => refRBSheet.current.open()}
+              onPress={() => {
+                setuploadSection(54);
+                refRBSheet.current.open();
+              }}
               style={{
                 marginLeft: 10,
                 paddingVertical: 5,
@@ -2255,7 +2334,7 @@ export default function ArrivalService({navigation}) {
             </TouchableOpacity>
           </View>
           {arrival[54].file.length > 0 && (
-            <View style={{marginBottom: 20}}>
+            <View style={{marginBottom: 20, marginTop: 20}}>
               {arrival[54].file.map((value, index) => {
                 return (
                   <View
@@ -2281,7 +2360,7 @@ export default function ArrivalService({navigation}) {
                         },
                       }),
                     }}>
-                    <Text style={{color: 'black'}}>{value.name}</Text>
+                    <Text style={styleSheet.imgName}>{value.name}</Text>
                     <TouchableOpacity onPress={() => removeFilePreA(54, index)}>
                       <Icons
                         style={{color: 'green', marginLeft: 10}}
@@ -2363,6 +2442,7 @@ export default function ArrivalService({navigation}) {
             </View>
             <View style={{flex: 1.5, flexDirection: 'column'}}>
               <TouchableOpacity
+                onPress={() => getImage(false)}
                 style={{
                   flex: 1,
                   flexDirection: 'row',
@@ -2370,11 +2450,12 @@ export default function ArrivalService({navigation}) {
                 }}>
                 <Icons name="camera-outline" size={25} color={'black'} />
                 <Text style={{color: 'black', fontSize: 18, paddingLeft: 20}}>
-                  Camera
+                  Upload from Camera
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => onPressDocPreA(6)}
+                //onPress={() => onPressDocPreA(6)}
+                onPress={() => getImage(true)}
                 style={{
                   flex: 1,
                   flexDirection: 'row',
@@ -2382,7 +2463,7 @@ export default function ArrivalService({navigation}) {
                 }}>
                 <Icons name="image-outline" size={25} color={'black'} />
                 <Text style={{color: 'black', fontSize: 18, paddingLeft: 20}}>
-                  Gallery
+                  Upload from Gallery
                 </Text>
               </TouchableOpacity>
             </View>
@@ -2398,6 +2479,7 @@ const styleSheet = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f2f2f2',
   },
+  imgName: {color: 'black', fontSize: 12, fontWeight: '600'},
   checkbox: {
     width: 40,
     height: 40,

@@ -1,3 +1,4 @@
+
 import {
   View,
   StyleSheet,
@@ -15,11 +16,18 @@ import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import React, {useRef, useState, useEffect} from 'react';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import DocumentPicker from 'react-native-document-picker';
+import * as ImagePicker from 'react-native-image-picker';
 import RNFetchBlob from 'rn-fetch-blob';
+import RBSheet from 'react-native-raw-bottom-sheet';
 import Loader from '../Loader';
+const {height} = Dimensions.get('window');
 
 export default function Departure({navigation}) {
   const currentDepart = useRef(0);
+  const refRBSheet = useRef();
+
+  const [uploadSection,setuploadSection]=useState(0);
+
   const [loading, setloading] = useState(false);
   const [crewTransport, setcrewTransport] = useState([]);
   const [paxTransport, setpaxTransport] = useState([]);
@@ -89,6 +97,24 @@ export default function Departure({navigation}) {
     null,
     null,
     [],
+    [
+      {
+        name: null,
+        location: null,
+        hotelMap: {value: null, file: []},
+        time: null,
+        remarks: null,
+      },
+    ], //55
+    [
+      {
+        name: null,
+        location: null,
+        hotelMap: {value: null, file: []},
+        time: null,
+        remarks: null,
+      },
+    ], //56
   ]);
   const [isDatePickerVisibleDepart, setDatePickerVisibilityDepart] =
     useState(false);
@@ -319,6 +345,80 @@ export default function Departure({navigation}) {
       }
     }
   };
+
+  const [uploadaddedsection,setuploadaddedsection]=useState(false);
+  const [addedpaxindex,setaddedpaxindex]=useState(0);
+
+  const onPressDocPreA_New = async (index,res) => {
+    console.log('HEREEEE',uploadSection,index);
+    setloading(false);
+    RNFetchBlob.fs
+  .readFile(res.uri, 'base64')
+  .then(encoded => {
+    // console.log(encoded, 'reports.base64');
+    setloading(false);
+    if(uploadaddedsection){
+      var tdeparture = [...crewTransport];
+      tdeparture[index].mapF.file.push({
+      name: res.fileName.replace('rn_image_picker_lib_temp_',''),
+      base64: 'data:' + res.type + ';base64,' + encoded,
+    });
+    setcrewTransport(tdeparture);
+    }else if(index===55){
+      var tdeparture = [...departure];
+      tdeparture[55][addedpaxindex].hotelMap.file.push({
+        name: res.fileName,
+        base64: 'data:' + res.type + ';base64,' + encoded,
+      });
+      setdeparture(tdeparture);
+    }else{
+      var tdeparture = [...departure];
+      tdeparture[index].file.push({
+        name: res.fileName.replace('rn_image_picker_lib_temp_',''),
+        base64: 'data:' + res.type + ';base64,' + encoded,
+      });
+      setdeparture(tdeparture);
+    }
+    
+    
+  })
+  .catch(error => {
+    setloading(false);
+    console.log(error);
+  });
+  refRBSheet.current.close();
+}
+//mark
+const getImage=async (type)=>{
+console.log("HERE",uploadSection)
+var options={mediaType:'image',includeBase64: false,maxHeight: 800,maxWidth: 800};
+console.log(options);
+switch(type){
+case true:
+  try {
+    options.mediaType='photo';
+    const result = await ImagePicker.launchImageLibrary(options);  
+    const file=result.assets[0];
+    onPressDocPreA_New(uploadSection,file)
+  } catch (error) {
+    console.log(error);
+  }
+  break;
+  case false:
+    try {
+      const result = await ImagePicker.launchCamera(options);  
+      const file=result.assets[0];
+      onPressDocPreA_New(uploadSection,file)
+    } catch (error) {
+      console.log(error);
+    }
+    break;
+    default:
+      break;
+}
+
+}
+
   const removeFilePrePaxTrans = (arrayIndex, index) => {
     var tdeparture = [...departure];
     tdeparture[arrayIndex].mapF.file.splice(index, 1);
@@ -337,7 +437,15 @@ export default function Departure({navigation}) {
         remarks: null,
       },
     ];
-    console.log(tpaxTransport);
+    var x=tpaxTransport[55];
+    x.push({
+      name: null,
+      location: null,
+      hotelMap: {value: null, file: []},
+      time: null,
+      remarks: null,
+    });
+    setdeparture(x);
     setdeparture(tpaxTransport);
   };
   const onRemovePaxTransport = index => {
@@ -345,6 +453,8 @@ export default function Departure({navigation}) {
     service[54].splice(index, 1);
     setdeparture(service);
   };
+
+  
   return (
     <View>
       <View
@@ -354,14 +464,7 @@ export default function Departure({navigation}) {
           justifyContent: 'space-between',
           marginVertical: 20,
         }}>
-        <TouchableOpacity
-          style={{marginLeft: 10}}
-          onPress={() => {
-            navigation.openDrawer();
-          }}>
-          <Icons name="menu" color="green" size={30} />
-        </TouchableOpacity>
-        <Text style={{fontSize: 24, fontWeight: 'bold', color: 'black'}}>
+        <Text style={{fontSize: 24, fontWeight: 'bold', color: 'black',paddingLeft:20}}>
           Departure
         </Text>
         <TouchableOpacity style={{marginRight: 20}}>
@@ -463,7 +566,12 @@ export default function Departure({navigation}) {
               }}>
               <Text style={styleSheet.label}>Map of Route to Airport</Text>
               <TouchableOpacity
-                onPress={event => onPressDocPreA(3)}
+                //onPress={event => onPressDocPreA(3)}
+                onPress={() => {
+                  setuploadaddedsection(false);
+                  setuploadSection(3)
+                  refRBSheet.current.open()
+                }}
                 style={{
                   marginLeft: 10,
                   paddingVertical: 5,
@@ -649,7 +757,12 @@ export default function Departure({navigation}) {
                       Map of Route to Airport
                     </Text>
                     <TouchableOpacity
-                      onPress={event => onPressDocPreTrans(index)}
+                      //onPress={event => onPressDocPreTrans(index)}
+                      onPress={() => {
+                        setuploadaddedsection(true);
+                        setuploadSection(index)
+                        refRBSheet.current.open()
+                      }}
                       style={{
                         marginLeft: 10,
                         paddingVertical: 5,
@@ -1106,7 +1219,12 @@ export default function Departure({navigation}) {
               }}>
               <Text style={styleSheet.label}>Fuel Receipt (signed)</Text>
               <TouchableOpacity
-                onPress={event => onPressDocPreA(17)}
+                //onPress={event => onPressDocPreA(17)}
+                onPress={() => {
+                  setuploadaddedsection(false);
+                  setuploadSection(17)
+                  refRBSheet.current.open()
+                }}
                 disabled={departure[18].checked}
                 style={{
                   marginLeft: 10,
@@ -1484,7 +1602,12 @@ export default function Departure({navigation}) {
               </Text>
               <TouchableOpacity
                 disabled={departure[32].checked}
-                onPress={event => onPressDocPreA(29)}
+                //onPress={event => onPressDocPreA(29)}
+                onPress={() => {
+                  setuploadaddedsection(false);
+                  setuploadSection(29)
+                  refRBSheet.current.open()
+                }}
                 style={{
                   marginLeft: 10,
                   paddingVertical: 5,
@@ -1662,7 +1785,12 @@ export default function Departure({navigation}) {
               }}>
               <Text style={styleSheet.label}>Baggage Photo</Text>
               <TouchableOpacity
-                onPress={event => onPressDocPreA(36)}
+                //onPress={event => onPressDocPreA(36)}
+                onPress={() => {
+                  setuploadaddedsection(false);
+                  setuploadSection(36)
+                  refRBSheet.current.open()
+                }}
                 style={{
                   marginLeft: 10,
                   paddingVertical: 5,
@@ -1834,7 +1962,11 @@ export default function Departure({navigation}) {
               }}>
               <Text style={styleSheet.label}>Map of Route to Airport</Text>
               <TouchableOpacity
-                onPress={event => onPressDocPreA(50)}
+                //onPress={event => onPressDocPreA(50)}
+                onPress={() =>{
+                  setuploadSection(50)
+                   refRBSheet.current.open()
+                  }}
                 style={{
                   marginLeft: 10,
                   paddingVertical: 5,
@@ -2020,7 +2152,14 @@ export default function Departure({navigation}) {
                       Map of Route to Airport
                     </Text>
                     <TouchableOpacity
-                      onPress={event => onPressDocPrePaxTrans(index)}
+                      //onPress={event => onPressDocPrePaxTrans(index)}
+                      onPress={() => {
+                        //mark
+                        setuploadaddedsection(false);
+                        setaddedpaxindex(index);
+                        setuploadSection(55)
+                        refRBSheet.current.open()
+                      }}
                       style={{
                         marginLeft: 10,
                         paddingVertical: 5,
@@ -2031,10 +2170,9 @@ export default function Departure({navigation}) {
                       <Text style={{color: 'green'}}>Take Camera</Text>
                     </TouchableOpacity>
                   </View>
-                  {val.mapF && val.mapF.file.length > 0 && (
+                  {departure[55][index].hotelMap.file.length>0 && (
                     <View style={{marginBottom: 20}}>
-                      {val.mapF &&
-                        val.mapF.file.map((value, pos) => {
+                      { departure[55][index].hotelMap.file.map((value, pos) => {
                           return (
                             <View
                               key={pos}
@@ -2431,6 +2569,52 @@ export default function Departure({navigation}) {
           onCancel={hideDatePickerDepart}
           is24Hour={true}
         />
+        <RBSheet
+          ref={refRBSheet}
+          closeOnDragDown={true}
+          closeOnPressMask={true}
+          height={height / 4}
+          customStyles={{
+            wrapper: {
+              backgroundColor: '#00000056',
+            },
+            draggableIcon: {
+              backgroundColor: '#000',
+            },
+          }}>
+          <View style={{flex: 1, paddingLeft: 20}}>
+            <View style={{flex: 1}}>
+              <Text style={{color: 'black', fontSize: 22}}>Upload Image</Text>
+            </View>
+            <View style={{flex: 1.5, flexDirection: 'column'}}>
+              <TouchableOpacity
+                onPress={()=>getImage(false)}
+                style={{
+                  flex: 1,
+                  flexDirection: 'row',
+                  justifyContent: 'flex-start',
+                }}>
+                <Icons name="camera-outline" size={25} color={'black'} />
+                <Text style={{color: 'black', fontSize: 18, paddingLeft: 20}}>
+                  Upload from Camera
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                //onPress={() => onPressDocPreA(6)}
+                onPress={()=>getImage(true)}
+                style={{
+                  flex: 1,
+                  flexDirection: 'row',
+                  justifyContent: 'flex-start',
+                }}>
+                <Icons name="image-outline" size={25} color={'black'} />
+                <Text style={{color: 'black', fontSize: 18, paddingLeft: 20}}>
+                  Upload from Gallery
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </RBSheet>
       </ScrollView>
     </View>
   );
@@ -2441,6 +2625,7 @@ const styleSheet = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f2f2f2',
   },
+  imgName:{color: 'black',fontSize:12,fontWeight:'600'},
   checkbox: {
     width: 40,
     height: 40,
