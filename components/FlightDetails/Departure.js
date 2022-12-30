@@ -20,6 +20,8 @@ import * as ImagePicker from 'react-native-image-picker';
 import RNFetchBlob from 'rn-fetch-blob';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import Loader from '../Loader';
+import LabelledInput from '../subcomponents/Forms/universal/labelledinput';
+import DateTimeInput from '../subcomponents/Forms/universal/datetimeinput';
 const {height} = Dimensions.get('window');
 
 export default function Departure({navigation}) {
@@ -31,6 +33,11 @@ export default function Departure({navigation}) {
   const [loading, setloading] = useState(false);
   const [crewTransport, setcrewTransport] = useState([]);
   const [paxTransport, setpaxTransport] = useState([]);
+
+
+  const [paxarrivaltimeactive,setpaxarrivaltimeactive]=useState(false);
+  const [paxboardedtimeactive,setpaxboardedtimeactive]=useState(false);
+  const [paxarrivaltimeaddedactive,setpaxarrivaltimeaddedactive]=useState([]);
 
   const [mode, setMode] = useState('time');
   const tConvert = datetime => {
@@ -115,9 +122,20 @@ export default function Departure({navigation}) {
         remarks: null,
       },
     ], //56
+    {checked: false, remarks: null}, //57
+    {checked: false, remarks: null}, //58
+    null, //59
+    null, //60
+
+    //Pax Movement
+    //- from Pickup location to airport
+    null, //61
+    null, //..2
+    null, //..3
+    {checked: false, remarks: null}, //..4
+
   ]);
-  const [isDatePickerVisibleDepart, setDatePickerVisibilityDepart] =
-    useState(false);
+  const [isDatePickerVisibleDepart, setDatePickerVisibilityDepart] =useState(false);
   const showDatePickerDepart = (type, index) => {
     currentDepart.current = [index];
     setMode(type);
@@ -429,6 +447,7 @@ case true:
     tpaxTransport[54] = [
       ...tpaxTransport[54],
       {
+        arrivaActive:true,
         arrival: null,
         boarded: null,
         mapF: {value: null, file: []},
@@ -510,7 +529,19 @@ case true:
               ]}>
               From Pickup Location to Airport
             </Text>
-            <Text style={styleSheet.label}>
+            <DateTimeInput 
+                      label={'Actual Transport Arrival Time at Pickup Location (Local Time)'}
+                      showDatePickerPostDepart={()=>{showDatePickerDepart('time', 1)}}
+                      setNowPostDepart={()=>{setNowDepart(1)}}
+                      notrequiredSection={true}
+                      size={12}
+                      
+                      type={'time'}
+                      data={departure[1]}
+                      index={1}
+                    />
+
+            {/* <Text style={styleSheet.label}>
               Actual Transport Arrival Time at Pickup Location (Local Time)
             </Text>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -532,8 +563,8 @@ case true:
                   Time Now
                 </Text>
               </TouchableOpacity>
-            </View>
-            <Text style={styleSheet.label}>
+            </View> */}
+            {/* <Text style={styleSheet.label}>
               Time Crew Boarded Transport at Pickup Location (Local Time)
             </Text>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -555,87 +586,30 @@ case true:
                   Time Now
                 </Text>
               </TouchableOpacity>
-            </View>
-
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                marginVertical: 20,
-              }}>
-              <Text style={styleSheet.label}>Map of Route to Airport</Text>
-              <TouchableOpacity
-                //onPress={event => onPressDocPreA(3)}
-                onPress={() => {
-                  setuploadaddedsection(false);
-                  setuploadSection(3)
-                  refRBSheet.current.open()
-                }}
-                style={{
-                  marginLeft: 10,
-                  paddingVertical: 5,
-                  paddingHorizontal: 10,
-                  borderWidth: 1,
-                  borderRadius: 8,
-                }}>
-                <Text style={{color: 'green'}}>Take Camera</Text>
-              </TouchableOpacity>
-            </View>
-            {departure[3].file.length > 0 && (
-              <View style={{marginBottom: 20}}>
-                {departure[3].file.map((value, index) => {
-                  return (
-                    <View
-                      key={index}
-                      style={{
-                        backgroundColor: 'white',
-                        borderRadius: 16,
-                        padding: 10,
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        marginBottom: 20,
-                        marginHorizontal: 5,
-                        ...Platform.select({
-                          ios: {
-                            shadowColor: '#000',
-                            shadowOffset: {width: 0, height: 2},
-                            shadowOpacity: 0.8,
-                            shadowRadius: 2,
-                          },
-                          android: {
-                            elevation: 3,
-                          },
-                        }),
-                      }}>
-                      <Text style={{color: 'black'}}>{value.name}</Text>
-                      <TouchableOpacity
-                        onPress={() => removeFilePreA(3, index)}>
-                        <Icons
-                          style={{color: 'green', marginLeft: 10}}
-                          name="close"
-                          size={30}
-                        />
-                      </TouchableOpacity>
-                    </View>
-                  );
-                })}
-              </View>
-            )}
-            <Text style={styleSheet.label}>Travel Time (Approximate)</Text>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <TextInput
-                style={styleSheet.input}
-                value={departure[4]}
-                onChangeText={text => {
-                  var tdeparture = [...departure];
-                  tdeparture[4] = text;
-                  setdeparture(tdeparture);
-                }}
-              />
-            </View>
-            <Text style={styleSheet.label}>Time Crew Arrived at Terminal</Text>
+            </View> */}
+  <DateTimeInput 
+                      label={'Time Crew Boarded Transport at Pickup Location (Local Time)'}
+                      showDatePickerPostDepart={()=>{showDatePickerDepart('time', 2)}}
+                      setNowPostDepart={()=>{setNowDepart(2)}}
+                      notrequiredSection={true}
+                      size={12}
+                      
+                      type={'time'}
+                      data={departure[2]}
+                      index={2}
+                    />
+            
+            <DateTimeInput 
+                      label={'Time Crew Arrived at Terminal (Local Time)'}
+                      showDatePickerPostDepart={()=>{showDatePickerDepart('time', 5)}}
+                      setNowPostDepart={()=>{setNowDepart(5)}}
+                      size={12}
+                      
+                      type={'time'}
+                      data={departure[5]}
+                      index={5}
+                    />
+            {/* <Text style={styleSheet.label}>Time Crew Arrived at Terminal</Text>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <TouchableOpacity
                 style={styleSheet.picker}
@@ -655,7 +629,7 @@ case true:
                   Time Now
                 </Text>
               </TouchableOpacity>
-            </View>
+            </View> */}
             <Text style={styleSheet.label}>Remarks</Text>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <TextInput
@@ -694,7 +668,18 @@ case true:
                       <Icons name="minus-box-outline" color="red" size={30} />
                     </TouchableOpacity>
                   </View>
-                  <Text style={styleSheet.label}>
+                  <DateTimeInput 
+                      label={'Actual Transport Arrival Time at Pickup Location (Local'}
+                      showDatePickerPostDepart={()=>{showDatePickerTrans('time', index, 'arrival')}}
+                      setNowPostDepart={()=>{setNowTrans(index, 'arrival')}}
+                      notrequiredSection={true}
+                      size={12}
+                      added={true}
+                      type={'time'}
+                      data={val.arrival}
+                      index={index}
+                    />
+                  {/* <Text style={styleSheet.label}>
                     Actual Transport Arrival Time at Pickup Location (Local
                     Time)
                   </Text>
@@ -719,8 +704,19 @@ case true:
                         Time Now
                       </Text>
                     </TouchableOpacity>
-                  </View>
-                  <Text style={styleSheet.label}>
+                  </View> */}
+                   <DateTimeInput 
+                      label={'Time Crew Boarded Transport at Pickup Location (Local'}
+                      showDatePickerPostDepart={()=>{showDatePickerTrans('time', index, 'boarded')}}
+                      setNowPostDepart={()=>{setNowTrans(index, 'boarded')}}
+                      notrequiredSection={true}
+                      size={12}
+                      added={true}
+                      type={'time'}
+                      data={val.boarded}
+                      index={index}
+                    />
+                  {/* <Text style={styleSheet.label}>
                     Time Crew Boarded Transport at Pickup Location (Local Time)
                   </Text>
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -744,92 +740,19 @@ case true:
                         Time Now
                       </Text>
                     </TouchableOpacity>
-                  </View>
+                  </View> */}
 
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      marginVertical: 20,
-                    }}>
-                    <Text style={styleSheet.label}>
-                      Map of Route to Airport
-                    </Text>
-                    <TouchableOpacity
-                      //onPress={event => onPressDocPreTrans(index)}
-                      onPress={() => {
-                        setuploadaddedsection(true);
-                        setuploadSection(index)
-                        refRBSheet.current.open()
-                      }}
-                      style={{
-                        marginLeft: 10,
-                        paddingVertical: 5,
-                        paddingHorizontal: 10,
-                        borderWidth: 1,
-                        borderRadius: 8,
-                      }}>
-                      <Text style={{color: 'green'}}>Take Camera</Text>
-                    </TouchableOpacity>
-                  </View>
-                  {val.mapF && val.mapF.file.length > 0 && (
-                    <View style={{marginBottom: 20}}>
-                      {val.mapF &&
-                        val.mapF.file.map((value, pos) => {
-                          return (
-                            <View
-                              key={pos}
-                              style={{
-                                backgroundColor: 'white',
-                                borderRadius: 16,
-                                padding: 10,
-                                flexDirection: 'row',
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
-                                marginBottom: 20,
-                                marginHorizontal: 5,
-                                ...Platform.select({
-                                  ios: {
-                                    shadowColor: '#000',
-                                    shadowOffset: {width: 0, height: 2},
-                                    shadowOpacity: 0.8,
-                                    shadowRadius: 2,
-                                  },
-                                  android: {
-                                    elevation: 3,
-                                  },
-                                }),
-                              }}>
-                              <Text style={{color: 'black'}}>{value.name}</Text>
-                              <TouchableOpacity
-                                onPress={() => removeFilePreTrans(index, pos)}>
-                                <Icons
-                                  style={{color: 'green', marginLeft: 10}}
-                                  name="close"
-                                  size={30}
-                                />
-                              </TouchableOpacity>
-                            </View>
-                          );
-                        })}
-                    </View>
-                  )}
-                  <Text style={styleSheet.label}>
-                    Travel Time (Approximate)
-                  </Text>
-                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <TextInput
-                      style={styleSheet.input}
-                      value={val.travel}
-                      onChangeText={text => {
-                        var tdeparture = [...crewTransport];
-                        tdeparture[index].travel = text;
-                        setcrewTransport(tdeparture);
-                      }}
+<DateTimeInput 
+                      label={'Time Crew Arrived at Terminal (Local Time)'}
+                      showDatePickerPostDepart={()=>{showDatePickerTrans('time', index, 'timeCrew')}}
+                      setNowPostDepart={()=>{setNowTrans(index, 'timeCrew')}}
+                      size={12}
+                      added={true}
+                      type={'time'}
+                      data={val.timeCrew}
+                      index={index}
                     />
-                  </View>
-                  <Text style={styleSheet.label}>
+                  {/* <Text style={styleSheet.label}>
                     Time Crew Arrived at Terminal
                   </Text>
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -853,7 +776,7 @@ case true:
                         Time Now
                       </Text>
                     </TouchableOpacity>
-                  </View>
+                  </View> */}
                   <Text style={styleSheet.label}>Remarks</Text>
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     <TextInput
@@ -880,7 +803,7 @@ case true:
               At Airport
             </Text>
             <Text style={[styleSheet.label]}>
-              Flight Documents Handover to Crew
+              Flight Documents Handover to Crew (Local Time)
             </Text>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <TouchableOpacity
@@ -902,7 +825,7 @@ case true:
                 </Text>
               </TouchableOpacity>
             </View>
-            <Text style={styleSheet.label}>Time Crew Cleared CIQ</Text>
+            <Text style={styleSheet.label}>Time Crew Cleared CIQ (Local Time)</Text>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <TouchableOpacity
                 style={styleSheet.picker}
@@ -924,7 +847,7 @@ case true:
               </TouchableOpacity>
             </View>
             <Text style={styleSheet.label}>
-              Time Crew Cleared Airport Security
+              Time Crew Cleared Airport Security (Local Time)
             </Text>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <TouchableOpacity
@@ -947,7 +870,7 @@ case true:
               </TouchableOpacity>
             </View>
             <Text style={styleSheet.label}>
-              Time Crew Boarded Transport to Aircraft
+              Time Crew Boarded Transport to Aircraft (Local Time)
             </Text>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <TouchableOpacity
@@ -969,7 +892,7 @@ case true:
                 </Text>
               </TouchableOpacity>
             </View>
-            <Text style={styleSheet.label}>Time Crew Boarded Aircraft</Text>
+            <Text style={styleSheet.label}>Time Crew Boarded Aircraft (Local Time)</Text>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <TouchableOpacity
                 style={styleSheet.picker}
@@ -990,6 +913,20 @@ case true:
                 </Text>
               </TouchableOpacity>
             </View>
+            <LabelledInput
+                label={'Remarks'} //mark
+                
+                data={departure[57].remarks}
+                datatype={'text'}
+                index={57}
+                setText={(index,text,type,section)=>{
+                  var tcheckList = [...departure];
+                  tcheckList[index].remarks = text;
+                  setdeparture(tcheckList);  
+                }} 
+                multiline={true}
+                numberOfLines={2}
+              />
           </View>
           {/*   ------------------------------Crew Movement	 End ----------- */}
 
@@ -1011,7 +948,13 @@ case true:
                 alignItems: 'center',
                 marginBottom: 10,
               }}>
-              <TouchableOpacity onPress={event => setCheckedDepart(13)}>
+              <TouchableOpacity onPress={event =>{
+                 setCheckedDepart(13)
+                 var x=[...departure]
+                 x[11]=null;
+                 x[12]=null;
+                 setdeparture(x);
+                }}>
                 <Icons
                   name={
                     departure[13].checked
@@ -1105,7 +1048,16 @@ case true:
                 alignItems: 'center',
                 marginBottom: 10,
               }}>
-              <TouchableOpacity onPress={event => setCheckedDepart(18)}>
+              <TouchableOpacity onPress={event =>{
+                 setCheckedDepart(18)
+                 var x=[...departure]
+                 x[14]=null;
+                 x[15]=null;
+                 x[16]=null;
+                 x[17]={value:false,file:[]};
+                 x[58].remarks=null;
+                 setdeparture(x);
+                 }}>
                 <Icons
                   name={
                     departure[18].checked
@@ -1180,7 +1132,7 @@ case true:
                 </Text>
               </TouchableOpacity>
             </View>
-            <Text style={styleSheet.label}>Stop Time (Local Time)</Text>
+            <Text style={styleSheet.label}>End Time (Local Time)</Text>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <TouchableOpacity
                 disabled={departure[18].checked}
@@ -1238,6 +1190,7 @@ case true:
                 }}>
                 <Text style={{color: 'green'}}>Take Camera</Text>
               </TouchableOpacity>
+              
             </View>
             {departure[17].file.length > 0 && (
               <View style={{marginBottom: 20}}>
@@ -1280,6 +1233,20 @@ case true:
                 })}
               </View>
             )}
+            <LabelledInput
+                label={'Remarks'} //mark
+                disabled={departure[18].checked}
+                data={departure[58].remarks}
+                datatype={'text'}
+                index={57}
+                setText={(index,text,type,section)=>{
+                  var tcheckList = [...departure];
+                  tcheckList[index].remarks = text;
+                  setdeparture(tcheckList);  
+                }} 
+                multiline={true}
+                numberOfLines={2}
+              />
           </View>
           {/*   ------------------------------Fuel on Departure end ----------- */}
 
@@ -1301,7 +1268,13 @@ case true:
                 alignItems: 'center',
                 marginBottom: 10,
               }}>
-              <TouchableOpacity onPress={event => setCheckedDepart(21)}>
+              <TouchableOpacity onPress={event =>{
+                   setCheckedDepart(21)
+                   var x=[...departure];
+                   x[19]=null
+                   x[59]=null
+                   setdeparture(x);
+                }}>
                 <Icons
                   name={
                     departure[21].checked
@@ -1314,7 +1287,7 @@ case true:
               </TouchableOpacity>
               <Text style={styleSheet.label}>Not Required</Text>
             </View>
-            <Text style={styleSheet.label}>Completion Time (Local Time)</Text>
+            <Text style={styleSheet.label}>Start Time (Local Time)</Text>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <TouchableOpacity
                 disabled={departure[21].checked}
@@ -1344,7 +1317,37 @@ case true:
                 </Text>
               </TouchableOpacity>
             </View>
-            <Text style={styleSheet.label}>Remarks</Text>
+            <Text style={styleSheet.label}>Stop Time (Local Time)</Text>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <TouchableOpacity
+                disabled={departure[21].checked}
+                style={[
+                  styleSheet.picker,
+                  {
+                    backgroundColor: departure[21].checked
+                      ? 'rgba(0,0,0,0.1)'
+                      : 'white',
+                  },
+                ]}
+                onPress={() => showDatePickerDepart('time', 19)}>
+                <Text style={{fontSize: 20, color: 'black'}}>
+                  {departure[59] ? departure[59] : 'dd/mm/yy, -- : --'}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                disabled={departure[21].checked}
+                onPress={() => setNowDepart(59)}
+                style={{padding: 10}}>
+                <Text
+                  style={{
+                    fontSize: Dimensions.get('window').width / 25,
+                    color: 'green',
+                  }}>
+                  Time Now
+                </Text>
+              </TouchableOpacity>
+            </View>
+            {/* <Text style={styleSheet.label}>Remarks</Text>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <TextInput
                 editable={!departure[21].checked}
@@ -1365,7 +1368,21 @@ case true:
                   setdeparture(tdeparture);
                 }}
               />
-            </View>
+            </View> */}
+             <LabelledInput
+                label={'Remarks'} //mark
+                disabled={departure[21].checked}
+                data={departure[20]}
+                datatype={'text'}
+                index={20}
+                setText={(index,text,type,section)=>{
+                  var tcheckList = [...departure];
+                  tcheckList[index] = text;
+                  setdeparture(tcheckList);  
+                }} 
+                multiline={true}
+                numberOfLines={2}
+              />
           </View>
           {/*   ------------------------------Water Service end ----------- */}
 
@@ -1387,7 +1404,13 @@ case true:
                 alignItems: 'center',
                 marginBottom: 10,
               }}>
-              <TouchableOpacity onPress={event => setCheckedDepart(24)}>
+              <TouchableOpacity onPress={event =>{
+                  setCheckedDepart(24)
+                  var x=[...departure];
+                  x[22]=null;
+                  x[60]=null;
+                  setdeparture(x);
+                 }}>
                 <Icons
                   name={
                     departure[24].checked
@@ -1400,7 +1423,7 @@ case true:
               </TouchableOpacity>
               <Text style={styleSheet.label}>Not Required</Text>
             </View>
-            <Text style={styleSheet.label}>Completion Time (Local Time)</Text>
+            <Text style={styleSheet.label}>Start Time (Local Time)</Text>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <TouchableOpacity
                 disabled={departure[24].checked}
@@ -1430,7 +1453,37 @@ case true:
                 </Text>
               </TouchableOpacity>
             </View>
-            <Text style={styleSheet.label}>Remarks</Text>
+            <Text style={styleSheet.label}>Stop Time (Local Time)</Text>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <TouchableOpacity
+                disabled={departure[24].checked}
+                style={[
+                  styleSheet.picker,
+                  {
+                    backgroundColor: departure[24].checked
+                      ? 'rgba(0,0,0,0.1)'
+                      : 'white',
+                  },
+                ]}
+                onPress={() => showDatePickerDepart('time', 22)}>
+                <Text style={{fontSize: 20, color: 'black'}}>
+                  {departure[60] ? departure[60] : 'dd/mm/yy, -- : --'}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                disabled={departure[24].checked}
+                onPress={() => setNowDepart(60)}
+                style={{padding: 10}}>
+                <Text
+                  style={{
+                    fontSize: Dimensions.get('window').width / 25,
+                    color: 'green',
+                  }}>
+                  Time Now
+                </Text>
+              </TouchableOpacity>
+            </View>
+            {/* <Text style={styleSheet.label}>Remarks</Text>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <TextInput
                 editable={!departure[24].checked}
@@ -1451,7 +1504,21 @@ case true:
                   setdeparture(tdeparture);
                 }}
               />
-            </View>
+            </View> */}
+              <LabelledInput
+                label={'Remarks'} //mark
+                disabled={departure[24].checked}
+                data={departure[23]}
+                datatype={'text'}
+                index={23}
+                setText={(index,text,type,section)=>{
+                  var tcheckList = [...departure];
+                  tcheckList[index] = text;
+                  setdeparture(tcheckList);  
+                }} 
+                multiline={true}
+                numberOfLines={2}
+              />
           </View>
           {/*   ------------------------------Lavatory Service end ----------- */}
 
@@ -1473,7 +1540,12 @@ case true:
                 alignItems: 'center',
                 marginBottom: 10,
               }}>
-              <TouchableOpacity onPress={event => setCheckedDepart(27)}>
+              <TouchableOpacity onPress={event =>{
+                  setCheckedDepart(27)
+                  var x=[...departure];
+                  x[25]=null;
+                  setdeparture(x);
+                }}>
                 <Icons
                   name={
                     departure[27].checked
@@ -1486,7 +1558,7 @@ case true:
               </TouchableOpacity>
               <Text style={styleSheet.label}>Not Required</Text>
             </View>
-            <Text style={styleSheet.label}>Completion Time</Text>
+            <Text style={styleSheet.label}>Completion Time (Local Time)</Text>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <TouchableOpacity
                 disabled={departure[27].checked}
@@ -1516,7 +1588,7 @@ case true:
                 </Text>
               </TouchableOpacity>
             </View>
-            <Text style={styleSheet.label}>Remarks</Text>
+            {/* <Text style={styleSheet.label}>Remarks</Text>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <TextInput
                 editable={!departure[27].checked}
@@ -1537,7 +1609,21 @@ case true:
                   setdeparture(tdeparture);
                 }}
               />
-            </View>
+            </View> */}
+              <LabelledInput
+                label={'Remarks'} //mark
+                disabled={departure[27].checked}
+                data={departure[26]}
+                datatype={'text'}
+                index={26}
+                setText={(index,text,type,section)=>{
+                  var tcheckList = [...departure];
+                  tcheckList[index] = text;
+                  setdeparture(tcheckList);  
+                }} 
+                multiline={true}
+                numberOfLines={2}
+              />
           </View>
           {/*   ------------------------------Rubbish Service end ----------- */}
 
@@ -1557,7 +1643,15 @@ case true:
                 alignItems: 'center',
                 marginBottom: 10,
               }}>
-              <TouchableOpacity onPress={event => setCheckedDepart(32)}>
+              <TouchableOpacity onPress={event =>{
+                    setCheckedDepart(32)
+                    var x=[...departure];
+                    x[28]=null;
+                    x[29]={value:false,file:[]};
+                    x[30]=null;
+                    setdeparture(x);
+
+                }}>
                 <Icons
                   name={
                     departure[32].checked
@@ -1648,7 +1742,7 @@ case true:
                           },
                         }),
                       }}>
-                      <Text style={{color: 'black'}}>{value.name}</Text>
+                      <Text style={{color: 'black',fontSize:12,fontWeight:'bold'}}>{value.name}</Text>
                       <TouchableOpacity
                         onPress={() => removeFilePreA(29, index)}>
                         <Icons
@@ -1694,28 +1788,21 @@ case true:
                 </Text>
               </TouchableOpacity>
             </View>
-            <Text style={styleSheet.label}>Remarks</Text>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <TextInput
-                editable={!departure[32].checked}
-                style={[
-                  styleSheet.input,
-                  {
-                    backgroundColor: departure[32].checked
-                      ? 'rgba(0,0,0,0.1)'
-                      : 'white',
-                  },
-                ]}
+       
+              <LabelledInput
+                label={'Remarks'} //mark
+                disabled={departure[32].checked}
+                data={departure[31]}
+                datatype={'text'}
+                index={31}
+                setText={(index,text,type,section)=>{
+                  var tcheckList = [...departure];
+                  tcheckList[index] = text;
+                  setdeparture(tcheckList);  
+                }} 
                 multiline={true}
                 numberOfLines={2}
-                value={departure[31]}
-                onChangeText={text => {
-                  var tdeparture = [...departure];
-                  tdeparture[31] = text;
-                  setdeparture(tdeparture);
-                }}
               />
-            </View>
           </View>
           {/*   ------------------------------Catering end ----------- */}
 
@@ -1828,7 +1915,7 @@ case true:
                           },
                         }),
                       }}>
-                      <Text style={{color: 'black'}}>{value.name}</Text>
+                      <Text style={{color: 'black',fontSize:12,fontWeight:'bold'}}>{value.name}</Text>
                       <TouchableOpacity
                         onPress={() => removeFilePreA(36, index)}>
                         <Icons
@@ -1845,7 +1932,7 @@ case true:
           </View>
           {/*   ------------------------------Baggage end ----------- */}
 
-          {/*   ------------------------------Pax Movement ----------- */}
+          {/*   ------------------------------Pax Movement //here ----------- */}
           <Text style={[styleSheet.label, {marginTop: 10}]}>Pax Movement:</Text>
           <View
             style={{
@@ -1855,182 +1942,9 @@ case true:
               borderRadius: 10,
               marginVertical: 10,
             }}>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                marginBottom: 10,
-              }}>
-              <TouchableOpacity onPress={event => setCheckedDepart(38)}>
-                <Icons
-                  name={
-                    departure[38].checked
-                      ? 'checkbox-marked-outline'
-                      : 'checkbox-blank-outline'
-                  }
-                  color={departure[38].checked ? 'green' : 'black'}
-                  size={40}
-                />
-              </TouchableOpacity>
-              <Text style={styleSheet.label}>Not Required</Text>
-            </View>
-            <Text
-              style={[
-                styleSheet.label,
-                {
-                  fontWeight: 'bold',
-                  borderBottomWidth: 1,
-                  marginBottom: 10,
-                  paddingBottom: 10,
-                  borderBottomColor: 'rgba(0,0,0,0.7)',
-                },
-              ]}>
-              From Pickup Location to Airport
-            </Text>
-            <Text style={styleSheet.label}>
-              Actual Transport Arrival Time at Pickup Location (Local Time)
-            </Text>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <TouchableOpacity
-                disabled={departure[38].checked}
-                style={[
-                  styleSheet.picker,
-                  {
-                    backgroundColor: departure[38].checked
-                      ? 'rgba(0,0,0,0.1)'
-                      : 'white',
-                  },
-                ]}
-                onPress={() => showDatePickerDepart('time', 37)}>
-                <Text style={{fontSize: 20, color: 'black'}}>
-                  {departure[37] ? departure[37] : 'dd/mm/yy, -- : --'}
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                disabled={departure[38].checked}
-                onPress={() => setNowDepart(37)}
-                style={{padding: 10}}>
-                <Text
-                  style={{
-                    fontSize: Dimensions.get('window').width / 25,
-                    color: 'green',
-                  }}>
-                  Time Now
-                </Text>
-              </TouchableOpacity>
-            </View>
-
-            <Text style={styleSheet.label}>
-              Time Crew Boarded Transport at Pickup Location (Local Time)
-            </Text>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <TouchableOpacity
-                disabled={departure[38].checked}
-                style={[
-                  styleSheet.picker,
-                  {
-                    backgroundColor: departure[38].checked
-                      ? 'rgba(0,0,0,0.1)'
-                      : 'white',
-                  },
-                ]}
-                onPress={() => showDatePickerDepart('time', 39)}>
-                <Text style={{fontSize: 20, color: 'black'}}>
-                  {departure[39] ? departure[39] : 'dd/mm/yy, -- : --'}
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                disabled={departure[38].checked}
-                onPress={() => setNowDepart(39)}
-                style={{padding: 10}}>
-                <Text
-                  style={{
-                    fontSize: Dimensions.get('window').width / 25,
-                    color: 'green',
-                  }}>
-                  Time Now
-                </Text>
-              </TouchableOpacity>
-            </View>
-
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                marginVertical: 20,
-              }}>
-              <Text style={styleSheet.label}>Map of Route to Airport</Text>
-              <TouchableOpacity
-                //onPress={event => onPressDocPreA(50)}
-                onPress={() =>{
-                  setuploadSection(50)
-                   refRBSheet.current.open()
-                  }}
-                style={{
-                  marginLeft: 10,
-                  paddingVertical: 5,
-                  paddingHorizontal: 10,
-                  borderWidth: 1,
-                  borderRadius: 8,
-                }}>
-                <Text style={{color: 'green'}}>Take Camera</Text>
-              </TouchableOpacity>
-            </View>
-            {departure[50].file.length > 0 && (
-              <View style={{marginBottom: 20}}>
-                {departure[50].file.map((value, index) => {
-                  return (
-                    <View
-                      key={index}
-                      style={{
-                        backgroundColor: 'white',
-                        borderRadius: 16,
-                        padding: 10,
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        marginBottom: 20,
-                        marginHorizontal: 5,
-                        ...Platform.select({
-                          ios: {
-                            shadowColor: '#000',
-                            shadowOffset: {width: 0, height: 2},
-                            shadowOpacity: 0.8,
-                            shadowRadius: 2,
-                          },
-                          android: {
-                            elevation: 3,
-                          },
-                        }),
-                      }}>
-                      <Text style={{color: 'black'}}>{value.name}</Text>
-                      <TouchableOpacity
-                        onPress={() => removeFilePreA(50, index)}>
-                        <Icons
-                          style={{color: 'green', marginLeft: 10}}
-                          name="close"
-                          size={30}
-                        />
-                      </TouchableOpacity>
-                    </View>
-                  );
-                })}
-              </View>
-            )}
-            <Text style={styleSheet.label}>Travel Time (Approximate)</Text>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <TextInput
-                style={styleSheet.input}
-                value={departure[51]}
-                onChangeText={text => {
-                  var tdeparture = [...departure];
-                  tdeparture[51] = text;
-                  setdeparture(tdeparture);
-                }}
-              />
-            </View>
-            <Text style={styleSheet.label}>Time Crew Arrived at Terminal</Text>
+            
+            
+            {/* <Text style={styleSheet.label}>Time Pax Arrived at Terminal</Text>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <TouchableOpacity
                 style={styleSheet.picker}
@@ -2050,7 +1964,114 @@ case true:
                   Time Now
                 </Text>
               </TouchableOpacity>
-            </View>
+            </View> */}
+
+
+
+
+          <Text style={styleSheet.label}>Actual Transport Arrival Time at Pickup Location (Local Time)</Text>
+          
+
+
+              <TouchableOpacity onPress={event =>{
+                // var x = paxhotelactivesections;
+                // setpaxhotelactivesections(!x);
+                // console.log(x);
+                //setpaxboardedtimeactive
+                setpaxarrivaltimeaddedactive
+                //come here
+                var x=!paxarrivaltimeactive;
+                setpaxarrivaltimeactive(x);
+                }}
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent:'flex-start',
+                  marginBottom: 5,
+                  marginTop:10
+                }} >
+                <Icons
+                  name={
+                   // paxhotelactivesections
+                   paxarrivaltimeactive
+                    
+                      ? 'checkbox-marked-outline'
+                      : 'checkbox-blank-outline'
+                  }
+                  color={paxarrivaltimeactive ? 'green' : 'black'}
+                  size={35}
+                />
+                <Text style={[styleSheet.label,{fontSize:15,paddingLeft:10}]}>Not Required</Text>
+              </TouchableOpacity>
+            <DateTimeInput 
+                label={'Actual Transport Arrival Time at Pickup Location (Local Time)'}
+                showLabel={false}
+                disabled={paxarrivaltimeactive}
+                showDatePickerPostDepart={()=>showDatePickerDepart('time', 52)}
+                setNowPostDepart={()=>setNowDepart(52)}
+                size={12}
+                type={'datetime'}
+                data={departure[52]}
+                index={52}
+              />
+
+
+<Text style={styleSheet.label}>Time Pax Boarded Transport at Pickup Location (Local Time)</Text>
+          
+
+
+          <TouchableOpacity onPress={event =>{
+            // var x = paxhotelactivesections;
+            // setpaxhotelactivesections(!x);
+            // console.log(x);
+            //setpaxboardedtimeactive
+            //come here
+            var x=!paxboardedtimeactive;
+              setpaxboardedtimeactive(x);
+            }}
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent:'flex-start',
+              marginBottom: 5,
+              marginTop:10
+            }} >
+            <Icons
+              name={
+               // paxhotelactivesections
+               paxboardedtimeactive
+                
+                  ? 'checkbox-marked-outline'
+                  : 'checkbox-blank-outline'
+              }
+              color={paxboardedtimeactive ? 'green' : 'black'}
+              size={35}
+            />
+            <Text style={[styleSheet.label,{fontSize:15,paddingLeft:10}]}>Not Required</Text>
+          </TouchableOpacity>
+            
+            <DateTimeInput 
+                label={null}
+                showLabel={false}
+                
+                disabled={paxboardedtimeactive}
+                showDatePickerPostDepart={()=>showDatePickerDepart('time', 61)}
+                setNowPostDepart={()=>setNowDepart(61)}
+                size={12}
+                type={'datetime'}
+                data={departure[61]}
+                index={61}
+              />
+            <DateTimeInput 
+                label={'Time Pax Arrived at Terminal (Local Time)'}
+                disabled={false}
+                showDatePickerPostDepart={()=>showDatePickerDepart('time', 62)}
+                setNowPostDepart={()=>setNowDepart(62)}
+                size={12}
+                type={'datetime'}
+                data={departure[62]}
+                index={62}
+              />
             <Text style={styleSheet.label}>Remarks</Text>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <TextInput
@@ -2069,13 +2090,14 @@ case true:
                 onPress={addpaxTransport}
                 style={[styleSheet.button]}>
                 <Text style={{color: 'white', textAlign: 'center'}}>
-                  Add Transport
+                  Add Movement
                 </Text>
               </TouchableOpacity>
             </View>
             {departure[54].map((val, index) => {
+              var arr=[];
               return (
-                <View key={index} style={{marginTop: 20}}>
+                <View key={val} style={{marginTop: 20}}>
                   <View
                     style={{
                       borderBottomWidth: 1,
@@ -2089,146 +2111,9 @@ case true:
                       <Icons name="minus-box-outline" color="red" size={30} />
                     </TouchableOpacity>
                   </View>
-                  <Text style={styleSheet.label}>
-                    Actual Transport Arrival Time at Pickup Location (Local
-                    Time)
-                  </Text>
-                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <TouchableOpacity
-                      style={styleSheet.picker}
-                      onPress={() =>
-                        showDatePickerPaxTrans('time', index, 'arrival')
-                      }>
-                      <Text style={{fontSize: 20, color: 'black'}}>
-                        {val.arrival ? val.arrival : 'dd/mm/yy, -- : --'}
-                      </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      onPress={() => setNowPaxTrans(index, 'arrival')}
-                      style={{padding: 10}}>
-                      <Text
-                        style={{
-                          fontSize: Dimensions.get('window').width / 25,
-                          color: 'green',
-                        }}>
-                        Time Now
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                  <Text style={styleSheet.label}>
-                    Time Crew Boarded Transport at Pickup Location (Local Time)
-                  </Text>
-                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <TouchableOpacity
-                      style={styleSheet.picker}
-                      onPress={() =>
-                        showDatePickerPaxTrans('time', index, 'boarded')
-                      }>
-                      <Text style={{fontSize: 20, color: 'black'}}>
-                        {val.boarded ? val.boarded : 'dd/mm/yy, -- : --'}
-                      </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      onPress={() => setNowPaxTrans(index, 'boarded')}
-                      style={{padding: 10}}>
-                      <Text
-                        style={{
-                          fontSize: Dimensions.get('window').width / 25,
-                          color: 'green',
-                        }}>
-                        Time Now
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                      marginVertical: 20,
-                    }}>
-                    <Text style={styleSheet.label}>
-                      Map of Route to Airport
-                    </Text>
-                    <TouchableOpacity
-                      //onPress={event => onPressDocPrePaxTrans(index)}
-                      onPress={() => {
-                        //mark
-                        setuploadaddedsection(false);
-                        setaddedpaxindex(index);
-                        setuploadSection(55)
-                        refRBSheet.current.open()
-                      }}
-                      style={{
-                        marginLeft: 10,
-                        paddingVertical: 5,
-                        paddingHorizontal: 10,
-                        borderWidth: 1,
-                        borderRadius: 8,
-                      }}>
-                      <Text style={{color: 'green'}}>Take Camera</Text>
-                    </TouchableOpacity>
-                  </View>
-                  {departure[55][index].hotelMap.file.length>0 && (
-                    <View style={{marginBottom: 20}}>
-                      { departure[55][index].hotelMap.file.map((value, pos) => {
-                          return (
-                            <View
-                              key={pos}
-                              style={{
-                                backgroundColor: 'white',
-                                borderRadius: 16,
-                                padding: 10,
-                                flexDirection: 'row',
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
-                                marginBottom: 20,
-                                marginHorizontal: 5,
-                                ...Platform.select({
-                                  ios: {
-                                    shadowColor: '#000',
-                                    shadowOffset: {width: 0, height: 2},
-                                    shadowOpacity: 0.8,
-                                    shadowRadius: 2,
-                                  },
-                                  android: {
-                                    elevation: 3,
-                                  },
-                                }),
-                              }}>
-                              <Text style={{color: 'black'}}>{value.name}</Text>
-                              <TouchableOpacity
-                                onPress={() =>
-                                  removeFilePrePaxTrans(index, pos)
-                                }>
-                                <Icons
-                                  style={{color: 'green', marginLeft: 10}}
-                                  name="close"
-                                  size={30}
-                                />
-                              </TouchableOpacity>
-                            </View>
-                          );
-                        })}
-                    </View>
-                  )}
-                  <Text style={styleSheet.label}>
-                    Travel Time (Approximate)
-                  </Text>
-                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <TextInput
-                      style={styleSheet.input}
-                      value={val.travel}
-                      onChangeText={text => {
-                        var tdeparture = [...departure];
-                        tdeparture[54][index].travel = text;
-                        setcrewTransport(tdeparture);
-                      }}
-                    />
-                  </View>
-                  <Text style={styleSheet.label}>
-                    Time Crew Arrived at Terminal
+                  
+                  {/* <Text style={styleSheet.label}>
+                    Time Pax Arrived at Terminal
                   </Text>
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     <TouchableOpacity
@@ -2251,7 +2136,47 @@ case true:
                         Time Now
                       </Text>
                     </TouchableOpacity>
-                  </View>
+                  </View> */}
+
+
+          
+                  <DateTimeInput 
+                    label={'Actual Transport Arrival Time at Pickup Location (Local Time)'}
+                    notrequiredSection={true}
+                    showLabel={true}
+                    disabled={paxarrivaltimeaddedactive.includes(index)}
+                    showDatePickerPostDepart={()=>showDatePickerPaxTrans('time', index, 'timeCrew')}
+                    setNowPostDepart={()=>setNowPaxTrans(index, 'timeCrew')}
+                    added={true}
+                    size={12}
+                    type={'datetime'}
+                    data={null}
+                    index={index}
+                  />
+
+                  <DateTimeInput 
+                    label={'Time Pax Boarded Transport at Terminal (Local Time)'}
+                    notrequiredSection={true}
+                    disabled={false}
+                    showDatePickerPostDepart={()=>showDatePickerPaxTrans('time', index, 'timeCrew')}
+                    setNowPostDepart={()=>setNowPaxTrans(index, 'timeCrew')}
+                    size={12}
+                    type={'datetime'}
+                    data={null}
+                    index={index}
+                  />
+
+                  <DateTimeInput 
+                    label={'Time Pax Arrived at Terminal (Local Time)'}
+                    disabled={false}
+                    showDatePickerPostDepart={()=>showDatePickerPaxTrans('time', index, 'timeCrew')}
+                    setNowPostDepart={()=>setNowPaxTrans(index, 'timeCrew')}
+                    size={12}
+                    type={'datetime'}
+                    data={null}
+                    index={index}
+                  />
+
                   <Text style={styleSheet.label}>Remarks</Text>
                   <View style={{flexDirection: 'row', alignItems: 'center'}}>
                     <TextInput
@@ -2375,7 +2300,7 @@ case true:
               </TouchableOpacity>
             </View>
             <Text style={styleSheet.label}>
-              Time Pax Cleared Airport Security (Local Time) (Local Time)
+              Time Pax Cleared Airport Security (Local Time)
             </Text>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <TouchableOpacity
@@ -2438,6 +2363,7 @@ case true:
                 </Text>
               </TouchableOpacity>
             </View>
+            
             <Text style={styleSheet.label}>
               Time Pax Boarded Aircraft (Local Time)
             </Text>
@@ -2470,6 +2396,19 @@ case true:
                 </Text>
               </TouchableOpacity>
             </View>
+            <Text style={styleSheet.label}>Remarks</Text>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <TextInput
+                style={[styleSheet.input]}
+                multiline={true}
+                numberOfLines={2}
+              />
+            </View>
+            {
+              //mark`
+              //ADD 
+              //REMARKS
+            }
           </View>
           {/*   ------------------------------Pax Movement end ----------- */}
 
@@ -2561,6 +2500,14 @@ case true:
               </Text>
             </TouchableOpacity>
           </View>
+          <Text style={styleSheet.label}>Additional Remarks</Text>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <TextInput
+                style={[styleSheet.input]}
+                multiline={true}
+                numberOfLines={2}
+              />
+            </View>
         </View>
         <DateTimePickerModal
           isVisible={isDatePickerVisibleDepart}
@@ -2613,6 +2560,7 @@ case true:
                 </Text>
               </TouchableOpacity>
             </View>
+            
           </View>
         </RBSheet>
       </ScrollView>
