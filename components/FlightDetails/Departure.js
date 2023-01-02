@@ -1,4 +1,3 @@
-
 import {
   View,
   StyleSheet,
@@ -13,6 +12,7 @@ import {
   ScrollView,
 } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+
 import React, {useRef, useState, useEffect} from 'react';
 import Icons from 'react-native-vector-icons/MaterialCommunityIcons';
 import DocumentPicker from 'react-native-document-picker';
@@ -28,16 +28,17 @@ export default function Departure({navigation}) {
   const currentDepart = useRef(0);
   const refRBSheet = useRef();
 
-  const [uploadSection,setuploadSection]=useState(0);
+  const [uploadSection, setuploadSection] = useState(0);
 
   const [loading, setloading] = useState(false);
   const [crewTransport, setcrewTransport] = useState([]);
   const [paxTransport, setpaxTransport] = useState([]);
 
-
-  const [paxarrivaltimeactive,setpaxarrivaltimeactive]=useState(false);
-  const [paxboardedtimeactive,setpaxboardedtimeactive]=useState(false);
-  const [paxarrivaltimeaddedactive,setpaxarrivaltimeaddedactive]=useState([]);
+  const [paxarrivaltimeactive, setpaxarrivaltimeactive] = useState(false);
+  const [paxboardedtimeactive, setpaxboardedtimeactive] = useState(false);
+  const [paxarrivaltimeaddedactive, setpaxarrivaltimeaddedactive] = useState(
+    [],
+  );
 
   const [mode, setMode] = useState('time');
   const tConvert = datetime => {
@@ -133,9 +134,9 @@ export default function Departure({navigation}) {
     null, //..2
     null, //..3
     {checked: false, remarks: null}, //..4
-
   ]);
-  const [isDatePickerVisibleDepart, setDatePickerVisibilityDepart] =useState(false);
+  const [isDatePickerVisibleDepart, setDatePickerVisibilityDepart] =
+    useState(false);
   const showDatePickerDepart = (type, index) => {
     currentDepart.current = [index];
     setMode(type);
@@ -364,78 +365,80 @@ export default function Departure({navigation}) {
     }
   };
 
-  const [uploadaddedsection,setuploadaddedsection]=useState(false);
-  const [addedpaxindex,setaddedpaxindex]=useState(0);
+  const [uploadaddedsection, setuploadaddedsection] = useState(false);
+  const [addedpaxindex, setaddedpaxindex] = useState(0);
 
-  const onPressDocPreA_New = async (index,res) => {
-    console.log('HEREEEE',uploadSection,index);
+  const onPressDocPreA_New = async (index, res) => {
+    console.log('HEREEEE', uploadSection, index);
     setloading(false);
     RNFetchBlob.fs
-  .readFile(res.uri, 'base64')
-  .then(encoded => {
-    // console.log(encoded, 'reports.base64');
-    setloading(false);
-    if(uploadaddedsection){
-      var tdeparture = [...crewTransport];
-      tdeparture[index].mapF.file.push({
-      name: res.fileName.replace('rn_image_picker_lib_temp_',''),
-      base64: 'data:' + res.type + ';base64,' + encoded,
-    });
-    setcrewTransport(tdeparture);
-    }else if(index===55){
-      var tdeparture = [...departure];
-      tdeparture[55][addedpaxindex].hotelMap.file.push({
-        name: res.fileName,
-        base64: 'data:' + res.type + ';base64,' + encoded,
+      .readFile(res.uri, 'base64')
+      .then(encoded => {
+        // console.log(encoded, 'reports.base64');
+        setloading(false);
+        if (uploadaddedsection) {
+          var tdeparture = [...crewTransport];
+          tdeparture[index].mapF.file.push({
+            name: res.fileName.replace('rn_image_picker_lib_temp_', ''),
+            base64: 'data:' + res.type + ';base64,' + encoded,
+          });
+          setcrewTransport(tdeparture);
+        } else if (index === 55) {
+          var tdeparture = [...departure];
+          tdeparture[55][addedpaxindex].hotelMap.file.push({
+            name: res.fileName,
+            base64: 'data:' + res.type + ';base64,' + encoded,
+          });
+          setdeparture(tdeparture);
+        } else {
+          var tdeparture = [...departure];
+          tdeparture[index].file.push({
+            name: res.fileName.replace('rn_image_picker_lib_temp_', ''),
+            base64: 'data:' + res.type + ';base64,' + encoded,
+          });
+          setdeparture(tdeparture);
+        }
+      })
+      .catch(error => {
+        setloading(false);
+        console.log(error);
       });
-      setdeparture(tdeparture);
-    }else{
-      var tdeparture = [...departure];
-      tdeparture[index].file.push({
-        name: res.fileName.replace('rn_image_picker_lib_temp_',''),
-        base64: 'data:' + res.type + ';base64,' + encoded,
-      });
-      setdeparture(tdeparture);
+    refRBSheet.current.close();
+  };
+  //mark
+  const getImage = async type => {
+    console.log('HERE', uploadSection);
+    var options = {
+      mediaType: 'image',
+      includeBase64: false,
+      maxHeight: 800,
+      maxWidth: 800,
+    };
+    console.log(options);
+    switch (type) {
+      case true:
+        try {
+          options.mediaType = 'photo';
+          const result = await ImagePicker.launchImageLibrary(options);
+          const file = result.assets[0];
+          onPressDocPreA_New(uploadSection, file);
+        } catch (error) {
+          console.log(error);
+        }
+        break;
+      case false:
+        try {
+          const result = await ImagePicker.launchCamera(options);
+          const file = result.assets[0];
+          onPressDocPreA_New(uploadSection, file);
+        } catch (error) {
+          console.log(error);
+        }
+        break;
+      default:
+        break;
     }
-    
-    
-  })
-  .catch(error => {
-    setloading(false);
-    console.log(error);
-  });
-  refRBSheet.current.close();
-}
-//mark
-const getImage=async (type)=>{
-console.log("HERE",uploadSection)
-var options={mediaType:'image',includeBase64: false,maxHeight: 800,maxWidth: 800};
-console.log(options);
-switch(type){
-case true:
-  try {
-    options.mediaType='photo';
-    const result = await ImagePicker.launchImageLibrary(options);  
-    const file=result.assets[0];
-    onPressDocPreA_New(uploadSection,file)
-  } catch (error) {
-    console.log(error);
-  }
-  break;
-  case false:
-    try {
-      const result = await ImagePicker.launchCamera(options);  
-      const file=result.assets[0];
-      onPressDocPreA_New(uploadSection,file)
-    } catch (error) {
-      console.log(error);
-    }
-    break;
-    default:
-      break;
-}
-
-}
+  };
 
   const removeFilePrePaxTrans = (arrayIndex, index) => {
     var tdeparture = [...departure];
@@ -447,7 +450,7 @@ case true:
     tpaxTransport[54] = [
       ...tpaxTransport[54],
       {
-        arrivaActive:true,
+        arrivaActive: true,
         arrival: null,
         boarded: null,
         mapF: {value: null, file: []},
@@ -456,7 +459,7 @@ case true:
         remarks: null,
       },
     ];
-    var x=tpaxTransport[55];
+    var x = tpaxTransport[55];
     x.push({
       name: null,
       location: null,
@@ -473,7 +476,6 @@ case true:
     setdeparture(service);
   };
 
-  
   return (
     <View>
       <View
@@ -483,7 +485,13 @@ case true:
           justifyContent: 'space-between',
           marginVertical: 20,
         }}>
-        <Text style={{fontSize: 24, fontWeight: 'bold', color: 'black',paddingLeft:20}}>
+        <Text
+          style={{
+            fontSize: 24,
+            fontWeight: 'bold',
+            color: 'black',
+            paddingLeft: 20,
+          }}>
           Departure
         </Text>
         <TouchableOpacity style={{marginRight: 20}}>
@@ -529,17 +537,22 @@ case true:
               ]}>
               From Pickup Location to Airport
             </Text>
-            <DateTimeInput 
-                      label={'Actual Transport Arrival Time at Pickup Location (Local Time)'}
-                      showDatePickerPostDepart={()=>{showDatePickerDepart('time', 1)}}
-                      setNowPostDepart={()=>{setNowDepart(1)}}
-                      notrequiredSection={true}
-                      size={12}
-                      
-                      type={'time'}
-                      data={departure[1]}
-                      index={1}
-                    />
+            <DateTimeInput
+              label={
+                'Actual Transport Arrival Time at Pickup Location (Local Time)'
+              }
+              showDatePickerPostDepart={() => {
+                showDatePickerDepart('time', 1);
+              }}
+              setNowPostDepart={() => {
+                setNowDepart(1);
+              }}
+              notrequiredSection={true}
+              size={12}
+              type={'time'}
+              data={departure[1]}
+              index={1}
+            />
 
             {/* <Text style={styleSheet.label}>
               Actual Transport Arrival Time at Pickup Location (Local Time)
@@ -587,28 +600,36 @@ case true:
                 </Text>
               </TouchableOpacity>
             </View> */}
-  <DateTimeInput 
-                      label={'Time Crew Boarded Transport at Pickup Location (Local Time)'}
-                      showDatePickerPostDepart={()=>{showDatePickerDepart('time', 2)}}
-                      setNowPostDepart={()=>{setNowDepart(2)}}
-                      notrequiredSection={true}
-                      size={12}
-                      
-                      type={'time'}
-                      data={departure[2]}
-                      index={2}
-                    />
-            
-            <DateTimeInput 
-                      label={'Time Crew Arrived at Terminal (Local Time)'}
-                      showDatePickerPostDepart={()=>{showDatePickerDepart('time', 5)}}
-                      setNowPostDepart={()=>{setNowDepart(5)}}
-                      size={12}
-                      
-                      type={'time'}
-                      data={departure[5]}
-                      index={5}
-                    />
+            <DateTimeInput
+              label={
+                'Time Crew Boarded Transport at Pickup Location (Local Time)'
+              }
+              showDatePickerPostDepart={() => {
+                showDatePickerDepart('time', 2);
+              }}
+              setNowPostDepart={() => {
+                setNowDepart(2);
+              }}
+              notrequiredSection={true}
+              size={12}
+              type={'time'}
+              data={departure[2]}
+              index={2}
+            />
+
+            <DateTimeInput
+              label={'Time Crew Arrived at Terminal (Local Time)'}
+              showDatePickerPostDepart={() => {
+                showDatePickerDepart('time', 5);
+              }}
+              setNowPostDepart={() => {
+                setNowDepart(5);
+              }}
+              size={12}
+              type={'time'}
+              data={departure[5]}
+              index={5}
+            />
             {/* <Text style={styleSheet.label}>Time Crew Arrived at Terminal</Text>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <TouchableOpacity
@@ -668,17 +689,23 @@ case true:
                       <Icons name="minus-box-outline" color="red" size={30} />
                     </TouchableOpacity>
                   </View>
-                  <DateTimeInput 
-                      label={'Actual Transport Arrival Time at Pickup Location (Local'}
-                      showDatePickerPostDepart={()=>{showDatePickerTrans('time', index, 'arrival')}}
-                      setNowPostDepart={()=>{setNowTrans(index, 'arrival')}}
-                      notrequiredSection={true}
-                      size={12}
-                      added={true}
-                      type={'time'}
-                      data={val.arrival}
-                      index={index}
-                    />
+                  <DateTimeInput
+                    label={
+                      'Actual Transport Arrival Time at Pickup Location (Local'
+                    }
+                    showDatePickerPostDepart={() => {
+                      showDatePickerTrans('time', index, 'arrival');
+                    }}
+                    setNowPostDepart={() => {
+                      setNowTrans(index, 'arrival');
+                    }}
+                    notrequiredSection={true}
+                    size={12}
+                    added={true}
+                    type={'time'}
+                    data={val.arrival}
+                    index={index}
+                  />
                   {/* <Text style={styleSheet.label}>
                     Actual Transport Arrival Time at Pickup Location (Local
                     Time)
@@ -705,17 +732,23 @@ case true:
                       </Text>
                     </TouchableOpacity>
                   </View> */}
-                   <DateTimeInput 
-                      label={'Time Crew Boarded Transport at Pickup Location (Local'}
-                      showDatePickerPostDepart={()=>{showDatePickerTrans('time', index, 'boarded')}}
-                      setNowPostDepart={()=>{setNowTrans(index, 'boarded')}}
-                      notrequiredSection={true}
-                      size={12}
-                      added={true}
-                      type={'time'}
-                      data={val.boarded}
-                      index={index}
-                    />
+                  <DateTimeInput
+                    label={
+                      'Time Crew Boarded Transport at Pickup Location (Local'
+                    }
+                    showDatePickerPostDepart={() => {
+                      showDatePickerTrans('time', index, 'boarded');
+                    }}
+                    setNowPostDepart={() => {
+                      setNowTrans(index, 'boarded');
+                    }}
+                    notrequiredSection={true}
+                    size={12}
+                    added={true}
+                    type={'time'}
+                    data={val.boarded}
+                    index={index}
+                  />
                   {/* <Text style={styleSheet.label}>
                     Time Crew Boarded Transport at Pickup Location (Local Time)
                   </Text>
@@ -742,16 +775,20 @@ case true:
                     </TouchableOpacity>
                   </View> */}
 
-<DateTimeInput 
-                      label={'Time Crew Arrived at Terminal (Local Time)'}
-                      showDatePickerPostDepart={()=>{showDatePickerTrans('time', index, 'timeCrew')}}
-                      setNowPostDepart={()=>{setNowTrans(index, 'timeCrew')}}
-                      size={12}
-                      added={true}
-                      type={'time'}
-                      data={val.timeCrew}
-                      index={index}
-                    />
+                  <DateTimeInput
+                    label={'Time Crew Arrived at Terminal (Local Time)'}
+                    showDatePickerPostDepart={() => {
+                      showDatePickerTrans('time', index, 'timeCrew');
+                    }}
+                    setNowPostDepart={() => {
+                      setNowTrans(index, 'timeCrew');
+                    }}
+                    size={12}
+                    added={true}
+                    type={'time'}
+                    data={val.timeCrew}
+                    index={index}
+                  />
                   {/* <Text style={styleSheet.label}>
                     Time Crew Arrived at Terminal
                   </Text>
@@ -825,7 +862,9 @@ case true:
                 </Text>
               </TouchableOpacity>
             </View>
-            <Text style={styleSheet.label}>Time Crew Cleared CIQ (Local Time)</Text>
+            <Text style={styleSheet.label}>
+              Time Crew Cleared CIQ (Local Time)
+            </Text>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <TouchableOpacity
                 style={styleSheet.picker}
@@ -892,7 +931,9 @@ case true:
                 </Text>
               </TouchableOpacity>
             </View>
-            <Text style={styleSheet.label}>Time Crew Boarded Aircraft (Local Time)</Text>
+            <Text style={styleSheet.label}>
+              Time Crew Boarded Aircraft (Local Time)
+            </Text>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <TouchableOpacity
                 style={styleSheet.picker}
@@ -914,19 +955,18 @@ case true:
               </TouchableOpacity>
             </View>
             <LabelledInput
-                label={'Remarks'} //mark
-                
-                data={departure[57].remarks}
-                datatype={'text'}
-                index={57}
-                setText={(index,text,type,section)=>{
-                  var tcheckList = [...departure];
-                  tcheckList[index].remarks = text;
-                  setdeparture(tcheckList);  
-                }} 
-                multiline={true}
-                numberOfLines={2}
-              />
+              label={'Remarks'} //mark
+              data={departure[57].remarks}
+              datatype={'text'}
+              index={57}
+              setText={(index, text, type, section) => {
+                var tcheckList = [...departure];
+                tcheckList[index].remarks = text;
+                setdeparture(tcheckList);
+              }}
+              multiline={true}
+              numberOfLines={2}
+            />
           </View>
           {/*   ------------------------------Crew Movement	 End ----------- */}
 
@@ -948,12 +988,13 @@ case true:
                 alignItems: 'center',
                 marginBottom: 10,
               }}>
-              <TouchableOpacity onPress={event =>{
-                 setCheckedDepart(13)
-                 var x=[...departure]
-                 x[11]=null;
-                 x[12]=null;
-                 setdeparture(x);
+              <TouchableOpacity
+                onPress={event => {
+                  setCheckedDepart(13);
+                  var x = [...departure];
+                  x[11] = null;
+                  x[12] = null;
+                  setdeparture(x);
                 }}>
                 <Icons
                   name={
@@ -1048,16 +1089,17 @@ case true:
                 alignItems: 'center',
                 marginBottom: 10,
               }}>
-              <TouchableOpacity onPress={event =>{
-                 setCheckedDepart(18)
-                 var x=[...departure]
-                 x[14]=null;
-                 x[15]=null;
-                 x[16]=null;
-                 x[17]={value:false,file:[]};
-                 x[58].remarks=null;
-                 setdeparture(x);
-                 }}>
+              <TouchableOpacity
+                onPress={event => {
+                  setCheckedDepart(18);
+                  var x = [...departure];
+                  x[14] = null;
+                  x[15] = null;
+                  x[16] = null;
+                  x[17] = {value: false, file: []};
+                  x[58].remarks = null;
+                  setdeparture(x);
+                }}>
                 <Icons
                   name={
                     departure[18].checked
@@ -1174,8 +1216,8 @@ case true:
                 //onPress={event => onPressDocPreA(17)}
                 onPress={() => {
                   setuploadaddedsection(false);
-                  setuploadSection(17)
-                  refRBSheet.current.open()
+                  setuploadSection(17);
+                  refRBSheet.current.open();
                 }}
                 disabled={departure[18].checked}
                 style={{
@@ -1190,7 +1232,6 @@ case true:
                 }}>
                 <Text style={{color: 'green'}}>Take Camera</Text>
               </TouchableOpacity>
-              
             </View>
             {departure[17].file.length > 0 && (
               <View style={{marginBottom: 20}}>
@@ -1234,19 +1275,19 @@ case true:
               </View>
             )}
             <LabelledInput
-                label={'Remarks'} //mark
-                disabled={departure[18].checked}
-                data={departure[58].remarks}
-                datatype={'text'}
-                index={57}
-                setText={(index,text,type,section)=>{
-                  var tcheckList = [...departure];
-                  tcheckList[index].remarks = text;
-                  setdeparture(tcheckList);  
-                }} 
-                multiline={true}
-                numberOfLines={2}
-              />
+              label={'Remarks'} //mark
+              disabled={departure[18].checked}
+              data={departure[58].remarks}
+              datatype={'text'}
+              index={57}
+              setText={(index, text, type, section) => {
+                var tcheckList = [...departure];
+                tcheckList[index].remarks = text;
+                setdeparture(tcheckList);
+              }}
+              multiline={true}
+              numberOfLines={2}
+            />
           </View>
           {/*   ------------------------------Fuel on Departure end ----------- */}
 
@@ -1268,12 +1309,13 @@ case true:
                 alignItems: 'center',
                 marginBottom: 10,
               }}>
-              <TouchableOpacity onPress={event =>{
-                   setCheckedDepart(21)
-                   var x=[...departure];
-                   x[19]=null
-                   x[59]=null
-                   setdeparture(x);
+              <TouchableOpacity
+                onPress={event => {
+                  setCheckedDepart(21);
+                  var x = [...departure];
+                  x[19] = null;
+                  x[59] = null;
+                  setdeparture(x);
                 }}>
                 <Icons
                   name={
@@ -1369,20 +1411,20 @@ case true:
                 }}
               />
             </View> */}
-             <LabelledInput
-                label={'Remarks'} //mark
-                disabled={departure[21].checked}
-                data={departure[20]}
-                datatype={'text'}
-                index={20}
-                setText={(index,text,type,section)=>{
-                  var tcheckList = [...departure];
-                  tcheckList[index] = text;
-                  setdeparture(tcheckList);  
-                }} 
-                multiline={true}
-                numberOfLines={2}
-              />
+            <LabelledInput
+              label={'Remarks'} //mark
+              disabled={departure[21].checked}
+              data={departure[20]}
+              datatype={'text'}
+              index={20}
+              setText={(index, text, type, section) => {
+                var tcheckList = [...departure];
+                tcheckList[index] = text;
+                setdeparture(tcheckList);
+              }}
+              multiline={true}
+              numberOfLines={2}
+            />
           </View>
           {/*   ------------------------------Water Service end ----------- */}
 
@@ -1404,13 +1446,14 @@ case true:
                 alignItems: 'center',
                 marginBottom: 10,
               }}>
-              <TouchableOpacity onPress={event =>{
-                  setCheckedDepart(24)
-                  var x=[...departure];
-                  x[22]=null;
-                  x[60]=null;
+              <TouchableOpacity
+                onPress={event => {
+                  setCheckedDepart(24);
+                  var x = [...departure];
+                  x[22] = null;
+                  x[60] = null;
                   setdeparture(x);
-                 }}>
+                }}>
                 <Icons
                   name={
                     departure[24].checked
@@ -1505,20 +1548,20 @@ case true:
                 }}
               />
             </View> */}
-              <LabelledInput
-                label={'Remarks'} //mark
-                disabled={departure[24].checked}
-                data={departure[23]}
-                datatype={'text'}
-                index={23}
-                setText={(index,text,type,section)=>{
-                  var tcheckList = [...departure];
-                  tcheckList[index] = text;
-                  setdeparture(tcheckList);  
-                }} 
-                multiline={true}
-                numberOfLines={2}
-              />
+            <LabelledInput
+              label={'Remarks'} //mark
+              disabled={departure[24].checked}
+              data={departure[23]}
+              datatype={'text'}
+              index={23}
+              setText={(index, text, type, section) => {
+                var tcheckList = [...departure];
+                tcheckList[index] = text;
+                setdeparture(tcheckList);
+              }}
+              multiline={true}
+              numberOfLines={2}
+            />
           </View>
           {/*   ------------------------------Lavatory Service end ----------- */}
 
@@ -1540,10 +1583,11 @@ case true:
                 alignItems: 'center',
                 marginBottom: 10,
               }}>
-              <TouchableOpacity onPress={event =>{
-                  setCheckedDepart(27)
-                  var x=[...departure];
-                  x[25]=null;
+              <TouchableOpacity
+                onPress={event => {
+                  setCheckedDepart(27);
+                  var x = [...departure];
+                  x[25] = null;
                   setdeparture(x);
                 }}>
                 <Icons
@@ -1610,20 +1654,20 @@ case true:
                 }}
               />
             </View> */}
-              <LabelledInput
-                label={'Remarks'} //mark
-                disabled={departure[27].checked}
-                data={departure[26]}
-                datatype={'text'}
-                index={26}
-                setText={(index,text,type,section)=>{
-                  var tcheckList = [...departure];
-                  tcheckList[index] = text;
-                  setdeparture(tcheckList);  
-                }} 
-                multiline={true}
-                numberOfLines={2}
-              />
+            <LabelledInput
+              label={'Remarks'} //mark
+              disabled={departure[27].checked}
+              data={departure[26]}
+              datatype={'text'}
+              index={26}
+              setText={(index, text, type, section) => {
+                var tcheckList = [...departure];
+                tcheckList[index] = text;
+                setdeparture(tcheckList);
+              }}
+              multiline={true}
+              numberOfLines={2}
+            />
           </View>
           {/*   ------------------------------Rubbish Service end ----------- */}
 
@@ -1643,14 +1687,14 @@ case true:
                 alignItems: 'center',
                 marginBottom: 10,
               }}>
-              <TouchableOpacity onPress={event =>{
-                    setCheckedDepart(32)
-                    var x=[...departure];
-                    x[28]=null;
-                    x[29]={value:false,file:[]};
-                    x[30]=null;
-                    setdeparture(x);
-
+              <TouchableOpacity
+                onPress={event => {
+                  setCheckedDepart(32);
+                  var x = [...departure];
+                  x[28] = null;
+                  x[29] = {value: false, file: []};
+                  x[30] = null;
+                  setdeparture(x);
                 }}>
                 <Icons
                   name={
@@ -1699,8 +1743,8 @@ case true:
                 //onPress={event => onPressDocPreA(29)}
                 onPress={() => {
                   setuploadaddedsection(false);
-                  setuploadSection(29)
-                  refRBSheet.current.open()
+                  setuploadSection(29);
+                  refRBSheet.current.open();
                 }}
                 style={{
                   marginLeft: 10,
@@ -1742,7 +1786,14 @@ case true:
                           },
                         }),
                       }}>
-                      <Text style={{color: 'black',fontSize:12,fontWeight:'bold'}}>{value.name}</Text>
+                      <Text
+                        style={{
+                          color: 'black',
+                          fontSize: 12,
+                          fontWeight: 'bold',
+                        }}>
+                        {value.name}
+                      </Text>
                       <TouchableOpacity
                         onPress={() => removeFilePreA(29, index)}>
                         <Icons
@@ -1788,21 +1839,21 @@ case true:
                 </Text>
               </TouchableOpacity>
             </View>
-       
-              <LabelledInput
-                label={'Remarks'} //mark
-                disabled={departure[32].checked}
-                data={departure[31]}
-                datatype={'text'}
-                index={31}
-                setText={(index,text,type,section)=>{
-                  var tcheckList = [...departure];
-                  tcheckList[index] = text;
-                  setdeparture(tcheckList);  
-                }} 
-                multiline={true}
-                numberOfLines={2}
-              />
+
+            <LabelledInput
+              label={'Remarks'} //mark
+              disabled={departure[32].checked}
+              data={departure[31]}
+              datatype={'text'}
+              index={31}
+              setText={(index, text, type, section) => {
+                var tcheckList = [...departure];
+                tcheckList[index] = text;
+                setdeparture(tcheckList);
+              }}
+              multiline={true}
+              numberOfLines={2}
+            />
           </View>
           {/*   ------------------------------Catering end ----------- */}
 
@@ -1875,8 +1926,8 @@ case true:
                 //onPress={event => onPressDocPreA(36)}
                 onPress={() => {
                   setuploadaddedsection(false);
-                  setuploadSection(36)
-                  refRBSheet.current.open()
+                  setuploadSection(36);
+                  refRBSheet.current.open();
                 }}
                 style={{
                   marginLeft: 10,
@@ -1915,7 +1966,14 @@ case true:
                           },
                         }),
                       }}>
-                      <Text style={{color: 'black',fontSize:12,fontWeight:'bold'}}>{value.name}</Text>
+                      <Text
+                        style={{
+                          color: 'black',
+                          fontSize: 12,
+                          fontWeight: 'bold',
+                        }}>
+                        {value.name}
+                      </Text>
                       <TouchableOpacity
                         onPress={() => removeFilePreA(36, index)}>
                         <Icons
@@ -1942,8 +2000,6 @@ case true:
               borderRadius: 10,
               marginVertical: 10,
             }}>
-            
-            
             {/* <Text style={styleSheet.label}>Time Pax Arrived at Terminal</Text>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <TouchableOpacity
@@ -1966,112 +2022,113 @@ case true:
               </TouchableOpacity>
             </View> */}
 
+            <Text style={styleSheet.label}>
+              Actual Transport Arrival Time at Pickup Location (Local Time)
+            </Text>
 
-
-
-          <Text style={styleSheet.label}>Actual Transport Arrival Time at Pickup Location (Local Time)</Text>
-          
-
-
-              <TouchableOpacity onPress={event =>{
+            <TouchableOpacity
+              onPress={event => {
                 // var x = paxhotelactivesections;
                 // setpaxhotelactivesections(!x);
                 // console.log(x);
                 //setpaxboardedtimeactive
-                setpaxarrivaltimeaddedactive
+                setpaxarrivaltimeaddedactive;
                 //come here
-                var x=!paxarrivaltimeactive;
+                var x = !paxarrivaltimeactive;
                 setpaxarrivaltimeactive(x);
-                }}
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent:'flex-start',
-                  marginBottom: 5,
-                  marginTop:10
-                }} >
-                <Icons
-                  name={
-                   // paxhotelactivesections
-                   paxarrivaltimeactive
-                    
-                      ? 'checkbox-marked-outline'
-                      : 'checkbox-blank-outline'
-                  }
-                  color={paxarrivaltimeactive ? 'green' : 'black'}
-                  size={35}
-                />
-                <Text style={[styleSheet.label,{fontSize:15,paddingLeft:10}]}>Not Required</Text>
-              </TouchableOpacity>
-            <DateTimeInput 
-                label={'Actual Transport Arrival Time at Pickup Location (Local Time)'}
-                showLabel={false}
-                disabled={paxarrivaltimeactive}
-                showDatePickerPostDepart={()=>showDatePickerDepart('time', 52)}
-                setNowPostDepart={()=>setNowDepart(52)}
-                size={12}
-                type={'datetime'}
-                data={departure[52]}
-                index={52}
+              }}
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'flex-start',
+                marginBottom: 5,
+                marginTop: 10,
+              }}>
+              <Icons
+                name={
+                  // paxhotelactivesections
+                  paxarrivaltimeactive
+                    ? 'checkbox-marked-outline'
+                    : 'checkbox-blank-outline'
+                }
+                color={paxarrivaltimeactive ? 'green' : 'black'}
+                size={35}
               />
-
-
-<Text style={styleSheet.label}>Time Pax Boarded Transport at Pickup Location (Local Time)</Text>
-          
-
-
-          <TouchableOpacity onPress={event =>{
-            // var x = paxhotelactivesections;
-            // setpaxhotelactivesections(!x);
-            // console.log(x);
-            //setpaxboardedtimeactive
-            //come here
-            var x=!paxboardedtimeactive;
-              setpaxboardedtimeactive(x);
-            }}
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent:'flex-start',
-              marginBottom: 5,
-              marginTop:10
-            }} >
-            <Icons
-              name={
-               // paxhotelactivesections
-               paxboardedtimeactive
-                
-                  ? 'checkbox-marked-outline'
-                  : 'checkbox-blank-outline'
+              <Text style={[styleSheet.label, {fontSize: 15, paddingLeft: 10}]}>
+                Not Required
+              </Text>
+            </TouchableOpacity>
+            <DateTimeInput
+              label={
+                'Actual Transport Arrival Time at Pickup Location (Local Time)'
               }
-              color={paxboardedtimeactive ? 'green' : 'black'}
-              size={35}
+              showLabel={false}
+              disabled={paxarrivaltimeactive}
+              showDatePickerPostDepart={() => showDatePickerDepart('time', 52)}
+              setNowPostDepart={() => setNowDepart(52)}
+              size={12}
+              type={'datetime'}
+              data={departure[52]}
+              index={52}
             />
-            <Text style={[styleSheet.label,{fontSize:15,paddingLeft:10}]}>Not Required</Text>
-          </TouchableOpacity>
-            
-            <DateTimeInput 
-                label={null}
-                showLabel={false}
-                
-                disabled={paxboardedtimeactive}
-                showDatePickerPostDepart={()=>showDatePickerDepart('time', 61)}
-                setNowPostDepart={()=>setNowDepart(61)}
-                size={12}
-                type={'datetime'}
-                data={departure[61]}
-                index={61}
+
+            <Text style={styleSheet.label}>
+              Time Pax Boarded Transport at Pickup Location (Local Time)
+            </Text>
+
+            <TouchableOpacity
+              onPress={event => {
+                // var x = paxhotelactivesections;
+                // setpaxhotelactivesections(!x);
+                // console.log(x);
+                //setpaxboardedtimeactive
+                //come here
+                var x = !paxboardedtimeactive;
+                setpaxboardedtimeactive(x);
+              }}
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'flex-start',
+                marginBottom: 5,
+                marginTop: 10,
+              }}>
+              <Icons
+                name={
+                  // paxhotelactivesections
+                  paxboardedtimeactive
+                    ? 'checkbox-marked-outline'
+                    : 'checkbox-blank-outline'
+                }
+                color={paxboardedtimeactive ? 'green' : 'black'}
+                size={35}
               />
-            <DateTimeInput 
-                label={'Time Pax Arrived at Terminal (Local Time)'}
-                disabled={false}
-                showDatePickerPostDepart={()=>showDatePickerDepart('time', 62)}
-                setNowPostDepart={()=>setNowDepart(62)}
-                size={12}
-                type={'datetime'}
-                data={departure[62]}
-                index={62}
-              />
+              <Text style={[styleSheet.label, {fontSize: 15, paddingLeft: 10}]}>
+                Not Required
+              </Text>
+            </TouchableOpacity>
+
+            <DateTimeInput
+              label={null}
+              showLabel={false}
+              disabled={paxboardedtimeactive}
+              showDatePickerPostDepart={() => showDatePickerDepart('time', 61)}
+              setNowPostDepart={() => setNowDepart(61)}
+              size={12}
+              type={'datetime'}
+              data={departure[61]}
+              index={61}
+            />
+            <DateTimeInput
+              label={'Time Pax Arrived at Terminal (Local Time)'}
+              disabled={false}
+              showDatePickerPostDepart={() => showDatePickerDepart('time', 62)}
+              setNowPostDepart={() => setNowDepart(62)}
+              size={12}
+              type={'datetime'}
+              data={departure[62]}
+              index={62}
+            />
             <Text style={styleSheet.label}>Remarks</Text>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               <TextInput
@@ -2095,7 +2152,7 @@ case true:
               </TouchableOpacity>
             </View>
             {departure[54].map((val, index) => {
-              var arr=[];
+              var arr = [];
               return (
                 <View key={val} style={{marginTop: 20}}>
                   <View
@@ -2111,7 +2168,7 @@ case true:
                       <Icons name="minus-box-outline" color="red" size={30} />
                     </TouchableOpacity>
                   </View>
-                  
+
                   {/* <Text style={styleSheet.label}>
                     Time Pax Arrived at Terminal
                   </Text>
@@ -2138,15 +2195,17 @@ case true:
                     </TouchableOpacity>
                   </View> */}
 
-
-          
-                  <DateTimeInput 
-                    label={'Actual Transport Arrival Time at Pickup Location (Local Time)'}
+                  <DateTimeInput
+                    label={
+                      'Actual Transport Arrival Time at Pickup Location (Local Time)'
+                    }
                     notrequiredSection={true}
                     showLabel={true}
                     disabled={paxarrivaltimeaddedactive.includes(index)}
-                    showDatePickerPostDepart={()=>showDatePickerPaxTrans('time', index, 'timeCrew')}
-                    setNowPostDepart={()=>setNowPaxTrans(index, 'timeCrew')}
+                    showDatePickerPostDepart={() =>
+                      showDatePickerPaxTrans('time', index, 'timeCrew')
+                    }
+                    setNowPostDepart={() => setNowPaxTrans(index, 'timeCrew')}
                     added={true}
                     size={12}
                     type={'datetime'}
@@ -2154,23 +2213,29 @@ case true:
                     index={index}
                   />
 
-                  <DateTimeInput 
-                    label={'Time Pax Boarded Transport at Terminal (Local Time)'}
+                  <DateTimeInput
+                    label={
+                      'Time Pax Boarded Transport at Terminal (Local Time)'
+                    }
                     notrequiredSection={true}
                     disabled={false}
-                    showDatePickerPostDepart={()=>showDatePickerPaxTrans('time', index, 'timeCrew')}
-                    setNowPostDepart={()=>setNowPaxTrans(index, 'timeCrew')}
+                    showDatePickerPostDepart={() =>
+                      showDatePickerPaxTrans('time', index, 'timeCrew')
+                    }
+                    setNowPostDepart={() => setNowPaxTrans(index, 'timeCrew')}
                     size={12}
                     type={'datetime'}
                     data={null}
                     index={index}
                   />
 
-                  <DateTimeInput 
+                  <DateTimeInput
                     label={'Time Pax Arrived at Terminal (Local Time)'}
                     disabled={false}
-                    showDatePickerPostDepart={()=>showDatePickerPaxTrans('time', index, 'timeCrew')}
-                    setNowPostDepart={()=>setNowPaxTrans(index, 'timeCrew')}
+                    showDatePickerPostDepart={() =>
+                      showDatePickerPaxTrans('time', index, 'timeCrew')
+                    }
+                    setNowPostDepart={() => setNowPaxTrans(index, 'timeCrew')}
                     size={12}
                     type={'datetime'}
                     data={null}
@@ -2363,7 +2428,7 @@ case true:
                 </Text>
               </TouchableOpacity>
             </View>
-            
+
             <Text style={styleSheet.label}>
               Time Pax Boarded Aircraft (Local Time)
             </Text>
@@ -2406,7 +2471,7 @@ case true:
             </View>
             {
               //mark`
-              //ADD 
+              //ADD
               //REMARKS
             }
           </View>
@@ -2501,13 +2566,13 @@ case true:
             </TouchableOpacity>
           </View>
           <Text style={styleSheet.label}>Additional Remarks</Text>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <TextInput
-                style={[styleSheet.input]}
-                multiline={true}
-                numberOfLines={2}
-              />
-            </View>
+          <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <TextInput
+              style={[styleSheet.input]}
+              multiline={true}
+              numberOfLines={2}
+            />
+          </View>
         </View>
         <DateTimePickerModal
           isVisible={isDatePickerVisibleDepart}
@@ -2535,7 +2600,7 @@ case true:
             </View>
             <View style={{flex: 1.5, flexDirection: 'column'}}>
               <TouchableOpacity
-                onPress={()=>getImage(false)}
+                onPress={() => getImage(false)}
                 style={{
                   flex: 1,
                   flexDirection: 'row',
@@ -2548,7 +2613,7 @@ case true:
               </TouchableOpacity>
               <TouchableOpacity
                 //onPress={() => onPressDocPreA(6)}
-                onPress={()=>getImage(true)}
+                onPress={() => getImage(true)}
                 style={{
                   flex: 1,
                   flexDirection: 'row',
@@ -2560,7 +2625,6 @@ case true:
                 </Text>
               </TouchableOpacity>
             </View>
-            
           </View>
         </RBSheet>
       </ScrollView>
@@ -2573,7 +2637,7 @@ const styleSheet = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f2f2f2',
   },
-  imgName:{color: 'black',fontSize:12,fontWeight:'600'},
+  imgName: {color: 'black', fontSize: 12, fontWeight: '600'},
   checkbox: {
     width: 40,
     height: 40,
